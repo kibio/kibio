@@ -132,6 +132,7 @@ void SimpleApp::draw()
         str << "cmd-o: Open Project\n";
 //        str << "cmd-n: New Project\n";
         str << "cmd-s: Save Project\n";
+        str << "cmd-shift-s: Save As Project\n";
         str << "delete: Delete Video (when hovered)\n";
         
         ofDrawBitmapString(str.str(), 15, 15);
