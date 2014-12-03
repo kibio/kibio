@@ -1,0 +1,9 @@
+{
+   "layers" : [
+      {
+         "video" : {
+            "path" : "assets/videos/fingers.mov"
+         }
+      }
+   ]
+}
