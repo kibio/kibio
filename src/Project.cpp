@@ -87,7 +87,7 @@ void Project::draw()
         ofPoint mouse(ofGetMouseX(), ofGetMouseY());
         ofPushStyle();
         ofSetColor(255, 255, 0);
-        ofDrawLine(_dragStart, mouse);
+        ofLine(_dragStart, mouse);
         ofPopStyle();
     }
 }

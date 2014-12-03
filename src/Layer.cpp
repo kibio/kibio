@@ -53,7 +53,7 @@ void Layer::update()
     {
         _video->update();
 
-        if (_video->isInitialized() &&
+        if (_video->isLoaded() &&
             (_surface.getWidth() != _video->getWidth() ||
             _surface.getHeight() != _video->getHeight()))
         {
@@ -130,7 +130,7 @@ void Layer::update()
         }
         else
         {
-            ofDrawRectangle(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
+            ofRect(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
         }
         ofPopStyle();
         _maskSurface.end();
@@ -185,10 +185,10 @@ void Layer::draw()
     ofPushStyle();
 
     _maskShader.begin();
-    _maskShader.setUniformTexture("maskTex", _maskSurface.getTexture(), 1);
+    _maskShader.setUniformTexture("maskTex", _maskSurface.getTextureReference(), 1);
 
 
-    if (_video && _video->isInitialized())
+    if (_video && _video->isLoaded())
     {
         _video->draw(0, 0);
     }
@@ -234,7 +234,7 @@ bool Layer::hitTest(const ofPoint& point) const
 }
 
 
-ofPoint Layer::screenToLayer(const ofPoint& point) const
+ofPoint Layer::screenToLayer(const ofPoint& point)
 {
     return _warper.getMatrixInverse().preMult(point);
 //
@@ -242,7 +242,7 @@ ofPoint Layer::screenToLayer(const ofPoint& point) const
 }
 
 
-ofPoint Layer::layerToScreen(const ofPoint& point) const
+ofPoint Layer::layerToScreen(const ofPoint& point)
 {
     return _warper.getMatrix().preMult(point);
 }
@@ -254,7 +254,7 @@ bool Layer::loadVideo(const std::string& path)
 
     _video = std::shared_ptr<ofVideoPlayer>(new ofVideoPlayer());
 
-    if (_video->load(fullyQualifiedPath.toString()))
+    if (_video->loadMovie(fullyQualifiedPath.toString()))
     {
         _videoPath = path;
         _maskDirty = true;
@@ -306,9 +306,9 @@ bool Layer::saveMask()
     }
     else
     {
-        _maskPath = "assets/lastmask.png";
+        _maskPath = "assets/masks/" + ofGetTimestampString() + "-lastmask.png";
         ofPixels pixels;
-        _maskSurface.getTexture().readToPixels(pixels);
+        _maskSurface.getTextureReference().readToPixels(pixels);
         Poco::Path fullyQualifiedPath(_parent.getPath(), _maskPath);
         ofSaveImage(pixels, fullyQualifiedPath.toString());
         return true;
