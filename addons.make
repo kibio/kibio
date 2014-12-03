@@ -1,0 +1,4 @@
+ofxOpenCv
+ofxQuadWarp
+ofxMediaType
+ofxJSON
