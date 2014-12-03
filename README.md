@@ -1,6 +1,16 @@
 kibio
 =====
 
+### Use
+
+1. Collect videos and mask and place them in the proejct folder.  You can start with the `HelloWorld` project in `/Users/YOUR_USERNAME/Documents/Kibio/`.
+1. Add videos and any mask images to the project folder.
+1. Open the app.
+1. Drag a video from your project folder onto the app to create a layer.
+1. Drag a mask onto the video to create a mask.
+1. Position layer anchor points, edit the mask and then toggle into presentation mode.  
+1. Go full-screen and enjoy! 
+
 ### Keyboard Shortcuts
 
 Project
