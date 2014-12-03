@@ -3,12 +3,26 @@ kibio
 
 ### Keyboard Shortcuts
 
-- ⌘O -
+Project
+- ⌘O - Open Project
+  - Open a project files with `.kibio` file extensions.
 - ⌘S - Save
+  - Save the current open project.
 - ⌘⇧S - Save As ...
-- ⌘⌫ -
-- ⌘⇧⌫ - Delete
-- ⎋ - Quit and Save
+  - Save the current project with a new file name ... _(incomplete)_
+- ⎋ - Quit App and Save Project
+
+Application
+- ⌘F - Fullscreen Toggle
+- ⌘E - Edit / Presentation Mode Toggle
+
+Editor
+- With mouse over layer:
+  - ⌫ - Delete Layer
+  - ⌘⌫ - Delete Layer Mask
+- Masking
+  - ⌘Drag - Mask Pen Tool
+  - ⌘⇧S - Mask Erase Tool
 
 _Key_
 
