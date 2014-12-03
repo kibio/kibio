@@ -9,11 +9,12 @@ kibio
 1. Drag a video from your project folder onto the app to create a layer.
 1. Drag a mask onto the video to create a mask.
 1. Position layer anchor points, edit the mask and then toggle into presentation mode.  
-1. Go full-screen and enjoy! 
+1. Go full-screen and enjoy!
 
 ### Keyboard Shortcuts
 
 Project
+- ⌘K - Open Project Folder in Finder
 - ⌘O - Open Project
   - Open a project files with `.kibio` file extensions.
 - ⌘S - Save
