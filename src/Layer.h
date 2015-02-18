@@ -51,8 +51,8 @@ public:
 
     bool hitTest(const ofPoint& point) const;
 
-    ofPoint screenToLayer(const ofPoint& point) const;
-    ofPoint layerToScreen(const ofPoint& point) const;
+    ofPoint screenToLayer(const ofPoint& point); // const;
+    ofPoint layerToScreen(const ofPoint& point); // const;
 
     bool loadVideo(const std::string& path);
     bool loadMask(const std::string& path);

@@ -16,30 +16,50 @@
 		<string>github.com:bakercp/openFrameworks.git</string>
 		<key>5DB7C332A3A89035E93556A2A38BF414005BA671</key>
 		<string>github.com:bakercp/ofxJSON.git</string>
+		<key>7FCE467AAABAFDFDEC90540103849C1531C4AF29</key>
+		<string>github.com:kibio/kibio.git</string>
 		<key>CC64F4963C935629E4EEDB8221C0DA9B68D2313F</key>
 		<string>github.com:bakercp/ofxMediaType.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>apps/kibio/kibio/kibio.xcodeproj</string>
+	<string>kibio.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>14B8AC792BB3E433FAB0B60E4B728B5F7967140B</key>
-		<string>../../../../..addons/ofxQuadWarp/</string>
+		<string>../../../addons/ofxQuadWarp</string>
 		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
-		<string>../../../../..</string>
+		<string>../../..</string>
 		<key>5DB7C332A3A89035E93556A2A38BF414005BA671</key>
-		<string>../../../../..addons/ofxJSON/</string>
+		<string>../../../addons/ofxJSON</string>
+		<key>7FCE467AAABAFDFDEC90540103849C1531C4AF29</key>
+		<string>../..</string>
 		<key>CC64F4963C935629E4EEDB8221C0DA9B68D2313F</key>
-		<string>../../../../..addons/ofxMediaType/</string>
+		<string>../../../addons/ofxMediaType</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:bakercp/openFrameworks.git</string>
+	<string>github.com:kibio/kibio.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+	<string>7FCE467AAABAFDFDEC90540103849C1531C4AF29</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+			<key>IDESourceControlWCCName</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7FCE467AAABAFDFDEC90540103849C1531C4AF29</string>
+			<key>IDESourceControlWCCName</key>
+			<string>kibio</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
@@ -63,14 +83,6 @@
 			<string>14B8AC792BB3E433FAB0B60E4B728B5F7967140B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofxQuadWarp</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
-			<key>IDESourceControlWCCName</key>
-			<string>openFrameworks</string>
 		</dict>
 	</array>
 </dict>

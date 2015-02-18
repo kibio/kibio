@@ -144,7 +144,11 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
 {
     if (ofGetKeyPressed(OF_KEY_COMMAND))
     {
-        if ('e' == key.key)
+        if ('k' == key.key)
+        {
+            ofSystem("open " + getUserProjectsPath().toString());
+        }
+        else if ('e' == key.key)
         {
             switch (_mode)
             {
