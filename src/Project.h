@@ -69,13 +69,19 @@ public:
 
     /// \brief Load a project by name.
     /// \param name The name of the project in the user's project folder.
-    /// \returns true iff project is loaded.
+    /// \returns true if project is loaded.
     bool load(const std::string& name);
+    
+    /// \brief Create a new project
+    /// \param name The name of the new project
+    /// \param templateDir The name of the template project directory
+    /// \returns true if project was successfully created
+    bool create(const std::string& name, const std::string& templateDir);
 
     /// \brief Save a project.
     bool save();
 
-    /// \returns true iff project is loaded.
+    /// \returns true if project is loaded.
     bool isLoaded() const;
 
     /// \brief Get the project name.

@@ -27,7 +27,6 @@
 #include "Poco/FileStream.h"
 #include "Poco/UTF8String.h"
 
-
 namespace Kibio {
 
 
@@ -335,6 +334,52 @@ bool Project::load(const std::string& name)
     return _isLoaded;
 }
 
+bool Project::create(const std::string& name, const std::string& templateDir) {
+    
+    // template directory folder
+    Poco::File tempDir(ofToDataPath(templateDir));
+    
+    ofLogVerbose("Project::create") << "Copying template directory from \"" << tempDir.path() << "\"";
+    
+    if (tempDir.exists() && tempDir.isDirectory())
+    {
+        Poco::Path newProjectPath(_parent.getUserProjectsPath(), name);
+        Poco::File newProjectFolder(newProjectPath);
+        
+        if (newProjectFolder.exists()) {
+            ofLogError("Project::create") << "\"" << newProjectPath.toString() << "\" already exists";
+            return false;
+        }
+        
+        tempDir.copyTo(newProjectPath.toString());
+        
+        // rename the project file
+        Poco::Path projectFilePath(newProjectPath, newProjectPath.getBaseName() + Project::FILE_EXTENSION);
+        Poco::File projectFile(newProjectPath);
+        
+        if (!projectFile.exists()) {
+            ofLogError("Project::create") << "Project file \"" << projectFile.path() << "\" does not exist";
+        }
+        
+        Poco::Path newProjectFilePath(projectFilePath.parent(), name + Project::FILE_EXTENSION);
+        
+        projectFile.renameTo(newProjectFilePath.toString());
+        
+        ofLogNotice("Project::create") << "Project \"" << name << "\" created" ;
+        
+        return true;
+    }
+    else
+    {
+        
+        ofLogError("Project::create")
+            << "Template Directory \"" << templateDir << "\" does not exist or is not a directory" ;
+        
+        return false;
+    }
+        
+    
+}
 
 bool Project::save()
 {

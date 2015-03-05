@@ -59,6 +59,7 @@ public:
 
     Poco::Path getUserProjectsPath() const;
 
+    /// \brief Get the user's projects path.
     std::shared_ptr<Project> getCurrentProject();
 
     /// \brief Set the user's projects path.
@@ -75,9 +76,16 @@ public:
     /// \brief Save the app settings.
     void saveSettings();
 
+    bool createProject(const std::string& name);
+    
     /// \brief Load a project by name.
     /// \param name The name of the project.
     bool loadProject(const std::string& name);
+    
+    /// \brief Load a project by name.
+    /// \param name The name of the project.
+    /// \param project The project to load if the pointer already exists.
+    bool loadProject(const std::string& name, std::shared_ptr<Project> project);
 
     /// \brief Save the current project by name.
     bool saveProject();
@@ -109,6 +117,9 @@ public:
 
     /// \brief The default name for the default project.
     static const std::string DEFAULT_PROJECT;
+    
+    /// \brief The default name for the template project directory.
+    static const std::string DEFAULT_TEMPLATE_PROJECT_PATH;
 
     /// \brief Save the object to JSON.
     /// \brief The object to save.
