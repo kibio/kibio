@@ -43,21 +43,45 @@ class Project;
 class Layer
 {
 public:
+    
+    /// \brief Layer constructor.
+    /// \param A reference to the layer's project.
     Layer(Project& parent);
     ~Layer();
 
     void update();
     void draw();
 
+    /// \brief Check if the point is inside the layer
+    /// \param point The point to test the hit with
+    /// \returns true if point is inside the layer
     bool hitTest(const ofPoint& point) const;
 
+    /// \brief Get the screen point in layer space coordinates
+    /// \param point point in screen space
+    /// \returns point in layer space
     ofPoint screenToLayer(const ofPoint& point); // const;
+    
+    /// \brief Get the layer point in screen space coordinates
+    /// \param point point in layer space
+    /// \returns point in screen space
     ofPoint layerToScreen(const ofPoint& point); // const;
 
+    /// \brief Load a video into the layer
+    /// \param path path to video file
+    /// \returns true if successful
     bool loadVideo(const std::string& path);
+    
+    /// \brief Load a mask for the layer
+    /// \param path path to mask file
+    /// \returns true if successful
     bool loadMask(const std::string& path);
+    
+    /// \brief Save the mask for the layer
+    /// \returns true if successful
     bool saveMask();
 
+    /// \brief Clear the layer mask
     void clearMask();
 
     /// \brief Save the object to JSON.

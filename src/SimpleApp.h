@@ -1,6 +1,7 @@
 // =============================================================================
 //
 // Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,9 +55,11 @@ public:
     void exit();
 
     void keyPressed(ofKeyEventArgs& key);
-
+    
+    /// \brief Get the current mode.
     Mode getMode() const;
 
+    /// \brief Get the user's projects path.
     Poco::Path getUserProjectsPath() const;
 
     /// \brief Get the user's projects path.
@@ -76,6 +79,8 @@ public:
     /// \brief Save the app settings.
     void saveSettings();
 
+    /// \brief Create a new project.
+    /// \param name The name of the new project.
     bool createProject(const std::string& name);
     
     /// \brief Load a project by name.
@@ -87,7 +92,7 @@ public:
     /// \param project The project to load if the pointer already exists.
     bool loadProject(const std::string& name, std::shared_ptr<Project> project);
 
-    /// \brief Save the current project by name.
+    /// \brief Save the current project.
     bool saveProject();
 
 //    void saveProjectAs(const std::string& path);
@@ -122,14 +127,14 @@ public:
     static const std::string DEFAULT_TEMPLATE_PROJECT_PATH;
 
     /// \brief Save the object to JSON.
-    /// \brief The object to save.
+    /// \param The object to save.
     /// \returns the object as JSON.
     static Json::Value toJSON(const SimpleApp& object);
 
     /// \brief Load the object from JSON.
-    /// \brief json the object as JSON.
-    /// \brief object the object to load from JSON.
-    /// \returns true iff successful.
+    /// \param json the object as JSON.
+    /// \param object the object to load from JSON.
+    /// \returns true if successful.
     static bool fromJSON(const Json::Value& json, SimpleApp& object);
 
     bool makeRelativeToUserProjectsFolder(Poco::Path& path) const

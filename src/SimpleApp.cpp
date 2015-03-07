@@ -1,6 +1,7 @@
 // =============================================================================
 //
 // Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -148,6 +149,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
     {
         if ('k' == key.key)
         {
+            // is this platform independent?
             ofSystem("open " + getUserProjectsPath().toString());
         }
         else if ('e' == key.key)
@@ -253,6 +255,8 @@ Poco::Path SimpleApp::getUserProjectsPath() const
         catch (const Poco::Exception& exc)
         {
             ofLogError("Settings::setup") << exc.displayText();
+            ofSystemAlertDialog("Error: A Kibio projects folder does not exist and one could not be created");
+            
         }
     }
 
@@ -288,7 +292,7 @@ bool SimpleApp::createProject(const std::string& name)
 bool SimpleApp::loadProject(const std::string& name)
 {
     std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
-    loadProject(name, project);
+    return loadProject(name, project);
 }
 
 bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> project)
@@ -479,7 +483,7 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
         object._mode = PRESENT;
     }
 
-  #ifdef OF_TARGET_LINUX
+#ifdef OF_TARGET_LINUX
     Poco::Path defaultUserProjectsPath(Poco::Path::home(), Poco::Path(DEFAULT_USER_PROJECTS_PATH));
 #else
     Poco::Path defaultUserProjectsPath(Poco::Path::home(), Poco::Path("Documents/", DEFAULT_USER_PROJECTS_PATH));
@@ -499,6 +503,7 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 
     if (json.isMember("project"))
     {
+        // TODO: load default project if last open project has been deleted
         object.loadProject(json["project"].asString());
     }
 

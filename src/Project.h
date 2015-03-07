@@ -1,6 +1,7 @@
 // =============================================================================
 //
 // Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,17 +55,33 @@ public:
     void draw();
 
     /// \brief Drag event callback.
+    /// \param dragInfo The drag event info object
     void dragEvent(ofDragInfo& dragInfo);
 
     bool makeRelativeToProjectFolder(Poco::Path& path) const;
     bool isFileInProjectFolder(const Poco::Path& path) const;
-
+    
+    /// \brief Create a new layer.
+    /// \param videoPath The path to the video to use for the layer
+    /// \param point The point at which to place the video layer
     void newLayerWithVideoAtPoint(const Poco::Path& videoPath, const ofPoint& point);
+    
+    /// \brief Set a mask for the layer.
+    /// \param maskPath The path to the mask to use for the layer
+    /// \param point The point at which to place the mask on the layer
     void setMaskForLayerAtPoint(const Poco::Path& maskPath, const ofPoint& point);
 
+    /// \brief Delete a layer.
+    /// \param point The point used to select the layer to delete
     void deleteLayerAtPoint(const ofPoint& point);
+    
+    /// \brief Delete the mask used by the layer.
+    /// \param point The point used to select the mask to delete
     void clearMaskAtPoint(const ofPoint& point);
 
+    /// \brief Get the layer at point.
+    /// \param point The point used to get the layer by
+    /// \returns The layer at point
     std::shared_ptr<Layer> getLayerAtPoint(const ofPoint& point) const;
 
     /// \brief Load a project by name.
@@ -95,13 +112,13 @@ public:
     // static std::string toDebugString(const ofx::Media::AVMediaInfo& info);
 
     /// \brief Save the object to JSON.
-    /// \brief The object to save.
+    /// \param The object to save.
     /// \returns the object as JSON.
     static Json::Value toJSON(const Project& object);
 
     /// \brief Load the object from JSON.
-    /// \brief json the object as JSON.
-    /// \brief object the object to load from JSON.
+    /// \param json the object as JSON.
+    /// \param object the object to load from JSON.
     /// \returns true iff successful.
     static bool fromJSON(const Json::Value& json, Project& object);
 
