@@ -31,7 +31,12 @@
 namespace Kibio {
 
 
-Layer::Layer(Project& parent): _parent(parent), _maskDirty(true)
+Layer::Layer(Project& parent):
+    _parent(parent),
+    _maskDirty(true),
+    _id(Poco::UUIDGenerator().createRandom()),
+    _color(ofColor(255, 255, 255)),
+    _highlightColor(255, 255, 0)
 {
     _maskShader.load("shaders/GL3/mask");
     _frameCombineShader.load("shaders/GL3/frame_combine");
@@ -40,6 +45,7 @@ Layer::Layer(Project& parent): _parent(parent), _maskDirty(true)
     _maskSurface.allocate(1, 1, GL_RGBA, 8);
 
     ofLoadImage(_brushTex, "brushes/brush.png");
+    
 }
 
 
@@ -215,26 +221,56 @@ void Layer::draw()
         // TODO: Only when layer is on top
         if (hitTest(mouse))
         {
-            ofSetColor(255, 255, 0);
+            ofSetColor(_highlightColor);
         }
         else
         {
-            ofSetColor(255);
+            ofSetColor(_color);
+        }
+        
+        _warper.drawQuadOutline();
+        
+        ofPoint* corners = _warper.getTargetPoints();
+        for (std::size_t i = 0; i < 4; ++i) {
+            ofCircle(corners[i], 6);
+        }
+        
+        const ofPoint* hoveredCorner = getHoveredCorner(mouse);
+        if (hoveredCorner) {
+            ofSetColor(_highlightColor);
+            ofCircle(*hoveredCorner, 6);
         }
 
-        _warper.drawQuadOutline();
-        _warper.drawCorners();
-        _warper.drawHighlightedCorner();
-        _warper.drawSelectedCorner();
         ofPopStyle();
+        
     }
 }
 
 
 bool Layer::hitTest(const ofPoint& point) const
 {
-    return ofPolyline(std::vector<ofPoint>(_warper.dstPoints,
-                                           _warper.dstPoints + 4)).inside(point);
+    const ofPoint* p = getHoveredCorner(point);
+    return (!p && ofPolyline(std::vector<ofPoint>(_warper.dstPoints,
+                                           _warper.dstPoints + 4)).inside(point));
+}
+    
+const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
+{
+    
+    const ofPoint* p = 0;
+    
+    const ofPoint* points = _warper.dstPoints;
+    
+    for (std::size_t i = 0; i < 4; ++i)
+    {
+        if (mouse.distance(points[i]) <= 5)
+        {
+            p = &points[i];
+            break;
+        }
+    }
+    
+    return p;
 }
 
 

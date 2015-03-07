@@ -27,6 +27,8 @@
 
 
 #include <json/json.h>
+#include "Poco/UUIDGenerator.h"
+#include "Poco/UUID.h"
 #include "ofTypes.h"
 #include "ofVideoPlayer.h"
 #include "ofFbo.h"
@@ -56,6 +58,11 @@ public:
     /// \param point The point to test the hit with
     /// \returns true if point is inside the layer
     bool hitTest(const ofPoint& point) const;
+    
+    /// \brief Get the corner at mouse position
+    /// \param mouse The point to test the hit with
+    /// \returns pointer to corner if mouse is inside, nullptr if not
+    const ofPoint* getHoveredCorner(const ofPoint& mouse) const;
 
     /// \brief Get the screen point in layer space coordinates
     /// \param point point in screen space
@@ -108,9 +115,13 @@ public:
 
 private:
     Project& _parent;
+    Poco::UUID _id;
 
     ofFbo _surface;
     ofFbo _maskSurface;
+    
+    ofColor _color;
+    ofColor _highlightColor;
 
     std::string _videoPath;
     std::string _maskPath;
