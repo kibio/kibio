@@ -218,8 +218,10 @@ void Layer::draw()
     {
         ofPushStyle();
 
+        std::shared_ptr<Layer> layer = _parent.getLayerAtPoint(mouse);
+        
         // TODO: Only when layer is on top
-        if (hitTest(mouse))
+        if (layer && layer->_id == _id)
         {
             ofSetColor(_highlightColor);
         }
@@ -254,6 +256,26 @@ bool Layer::hitTest(const ofPoint& point) const
                                            _warper.dstPoints + 4)).inside(point));
 }
     
+//bool Layer::globalHitTest(const ofPoint& point) const
+//{
+//    const std::vector<std::shared_ptr<Layer> > layers = _parent._layers;
+//    
+//    bool isTopMostHit = false;
+//    std::string topHitID = "";
+//    
+//    for (std::size_t i = 0; i < layers.size(); ++i)
+//    {
+//        if (layers[i]->hitTest(point)) topHitID = layers[i]->_id.toString();
+//    }
+//    
+//    if (!topHitID.empty() && topHitID == _id.toString())
+//    {
+//        isTopMostHit = true;
+//    }
+//    
+//    return isTopMostHit;
+//}
+    
 const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
 {
     
@@ -261,12 +283,15 @@ const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
     
     const ofPoint* points = _warper.dstPoints;
     
-    for (std::size_t i = 0; i < 4; ++i)
+    if (points)
     {
-        if (mouse.distance(points[i]) <= 5)
+        for (std::size_t i = 0; i < 4; ++i)
         {
-            p = &points[i];
-            break;
+            if (mouse.distance(points[i]) <= 5)
+            {
+                p = &points[i];
+                break;
+            }
         }
     }
     

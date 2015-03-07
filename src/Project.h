@@ -100,6 +100,8 @@ public:
 
     /// \returns true if project is loaded.
     bool isLoaded() const;
+    
+    bool isCornerHovered(const ofPoint& point) const;
 
     /// \brief Get the project name.
     /// \returns the project name.
@@ -147,7 +149,7 @@ private:
 
     std::size_t _currentLayer;
     
-    std::vector<std::shared_ptr<Layer> > _layers;
+    std::deque<std::shared_ptr<Layer> > _layers;
 
     std::shared_ptr<Layer> _dragging;
     ofPoint _dragStart;

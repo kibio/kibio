@@ -53,7 +53,7 @@ Project::~Project()
 
 void Project::update()
 {
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -69,7 +69,7 @@ void Project::update()
 
 void Project::draw()
 {
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -282,7 +282,7 @@ std::shared_ptr<Layer> Project::getLayerAtPoint(const ofPoint& point) const
 {
     std::shared_ptr<Layer> empty;
 
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
 
     while (iter != _layers.begin() - 1)
     {
@@ -407,7 +407,7 @@ bool Project::save()
     try
     {
 
-        std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+        std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
         while (iter != _layers.end())
         {
@@ -437,7 +437,23 @@ bool Project::isLoaded() const
 {
     return _isLoaded;
 }
-
+    
+bool Project::isCornerHovered(const ofPoint& point) const
+{
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    
+    while (iter != _layers.end())
+    {
+        if ((*iter))
+        {
+            if ((*iter)->getHoveredCorner(point)) return true;
+        }
+        
+        ++iter;
+    }
+    
+    return false;
+}
 
 std::string Project::getName() const
 {
@@ -521,7 +537,7 @@ Json::Value Project::toJSON(const Project& object)
 {
     Json::Value json;
 
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
 
     while (iter != object._layers.end())
     {
@@ -567,7 +583,7 @@ void Project::keyPressed(ofKeyEventArgs& key)
     {
         if ('r' == key.key)
         {
-            std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+            std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
             while (iter != _layers.end())
             {
@@ -619,11 +635,18 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     std::shared_ptr<Layer> layer = getLayerAtPoint(mouse);
 
-//    if (layer)
-//    {
-//        _dragging = layer;
-//        _dragStart = mouse;
-//    }
+    if (layer)
+    {
+        // bring layer to front
+        _layers.pop_front();
+        _layers.push_back(layer);
+        
+        if (!isCornerHovered(mouse))
+        {
+            _dragging = layer;
+            _dragStart = mouse;
+        }
+    }
 }
 
 void Project::mouseReleased(ofMouseEventArgs& mouse)
