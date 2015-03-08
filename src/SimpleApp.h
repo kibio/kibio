@@ -137,17 +137,6 @@ public:
     /// \brief The default name for the template project directory.
     static const std::string DEFAULT_TEMPLATE_PROJECT_PATH;
 
-    /// \brief Save the object to JSON.
-    /// \param The object to save.
-    /// \returns the object as JSON.
-    static Json::Value toJSON(const SimpleApp& object);
-
-    /// \brief Load the object from JSON.
-    /// \param json the object as JSON.
-    /// \param object the object to load from JSON.
-    /// \returns true if successful.
-    static bool fromJSON(const Json::Value& json, SimpleApp& object);
-
     bool makeRelativeToUserProjectsFolder(Poco::Path& path) const
     {
         if (isFileInUserProjectsFolder(path))
