@@ -53,7 +53,7 @@ Project::~Project()
 
 void Project::update()
 {
-    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -69,7 +69,7 @@ void Project::update()
 
 void Project::draw()
 {
-    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -282,7 +282,7 @@ std::shared_ptr<Layer> Project::getLayerAtPoint(const ofPoint& point) const
 {
     std::shared_ptr<Layer> empty;
 
-    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
 
     while (iter != _layers.begin() - 1)
     {
@@ -407,7 +407,7 @@ bool Project::save()
     try
     {
 
-        std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+        std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
         while (iter != _layers.end())
         {
@@ -440,7 +440,7 @@ bool Project::isLoaded() const
     
 bool Project::isCornerHovered(const ofPoint& point) const
 {
-    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
     
     while (iter != _layers.end())
     {
@@ -537,7 +537,7 @@ Json::Value Project::toJSON(const Project& object)
 {
     Json::Value json;
 
-    std::deque<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
 
     while (iter != object._layers.end())
     {
@@ -583,7 +583,7 @@ void Project::keyPressed(ofKeyEventArgs& key)
     {
         if ('r' == key.key)
         {
-            std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+            std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
             while (iter != _layers.end())
             {
@@ -637,9 +637,24 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     if (layer)
     {
-        // bring layer to front
-        _layers.pop_front();
-        _layers.push_back(layer);
+        // check if this is already the top layer, if so ignore
+        if (layer->getId() != _layers[_layers.size() - 1]->getId())
+        {
+            std::vector<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
+            
+            while (iter != _layers.end())
+            {
+                if ((*iter) && (*iter)->getId() == layer->getId())
+                {
+                    _layers.erase(iter);
+                    _layers.push_back(layer);
+                    break;
+                }
+                
+                ++iter;
+            }
+            
+        }
         
         if (!isCornerHovered(mouse))
         {

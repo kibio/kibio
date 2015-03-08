@@ -92,6 +92,8 @@ public:
 
     /// \brief Clear the layer mask
     void clearMask();
+    
+    const Poco::UUID getId() const;
 
     /// \brief Save the object to JSON.
     /// \brief The object to save.

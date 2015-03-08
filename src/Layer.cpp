@@ -221,7 +221,7 @@ void Layer::draw()
         std::shared_ptr<Layer> layer = _parent.getLayerAtPoint(mouse);
         
         // TODO: Only when layer is on top
-        if (layer && layer->_id == _id)
+        if (layer && layer->getId() == getId())
         {
             ofSetColor(_highlightColor);
         }
@@ -508,7 +508,11 @@ bool Layer::fromJSON(const Json::Value& json, Layer& object)
 
     return true;
 }
-
+    
+const Poco::UUID Layer::getId() const
+{
+    return _id;
+}
 
 Json::Value Layer::toJSON(const std::vector<ofPoint>& object)
 {

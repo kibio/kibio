@@ -462,8 +462,8 @@ Json::Value SimpleApp::toJSON(const SimpleApp& object)
 
     json["screen"]["x"] = ofGetWindowPositionX();
     json["screen"]["y"] = ofGetWindowPositionY();
-    json["screen"]["width"] = ofGetWindowWidth();
-    json["screen"]["height"] = ofGetWindowHeight();
+    json["screen"]["width"] = (ofGetWindowWidth() > 50) ? ofGetWindowWidth() : 1200;
+    json["screen"]["height"] = (ofGetWindowHeight() > 50) ? ofGetWindowHeight() : 800;
     json["screen"]["fullscreen"] = (ofGetWindowMode() == OF_FULLSCREEN);
 
     return json;

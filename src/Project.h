@@ -149,7 +149,7 @@ private:
 
     std::size_t _currentLayer;
     
-    std::deque<std::shared_ptr<Layer> > _layers;
+    std::vector<std::shared_ptr<Layer> > _layers;
 
     std::shared_ptr<Layer> _dragging;
     ofPoint _dragStart;
