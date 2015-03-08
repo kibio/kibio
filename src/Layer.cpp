@@ -255,26 +255,7 @@ bool Layer::hitTest(const ofPoint& point) const
     return (!p && ofPolyline(std::vector<ofPoint>(_warper.dstPoints,
                                            _warper.dstPoints + 4)).inside(point));
 }
-    
-//bool Layer::globalHitTest(const ofPoint& point) const
-//{
-//    const std::vector<std::shared_ptr<Layer> > layers = _parent._layers;
-//    
-//    bool isTopMostHit = false;
-//    std::string topHitID = "";
-//    
-//    for (std::size_t i = 0; i < layers.size(); ++i)
-//    {
-//        if (layers[i]->hitTest(point)) topHitID = layers[i]->_id.toString();
-//    }
-//    
-//    if (!topHitID.empty() && topHitID == _id.toString())
-//    {
-//        isTopMostHit = true;
-//    }
-//    
-//    return isTopMostHit;
-//}
+
     
 const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
 {
@@ -296,6 +277,18 @@ const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
     }
     
     return p;
+}
+    
+const ofPoint Layer::getCentroid() const
+{
+    
+    const ofPoint* dstPoints = _warper.dstPoints;
+    float maxX = max(max(dstPoints[0].x, dstPoints[1].x), max(dstPoints[2].x, dstPoints[3].x));
+    float minX = min(min(dstPoints[0].x, dstPoints[1].x), min(dstPoints[2].x, dstPoints[3].x));
+    float maxY = max(max(dstPoints[0].y, dstPoints[1].y), max(dstPoints[2].y, dstPoints[3].y));
+    float minY = min(min(dstPoints[0].y, dstPoints[1].y), min(dstPoints[2].y, dstPoints[3].y));
+    
+    return ofPoint(minX + ((maxX - minX) * 0.5), minY + ((maxY - minY) * 0.5));
 }
 
 

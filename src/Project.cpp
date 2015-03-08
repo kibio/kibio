@@ -35,7 +35,8 @@ const std::string Project::FILE_EXTENSION = ".kibio";
 
 Project::Project(AbstractApp& parent):
     _parent(parent),
-    _isLoaded(false)
+    _isLoaded(false),
+    _transform(TRANSLATE)
 {
     ofRegisterDragEvents(this);
     ofRegisterKeyEvents(this);
@@ -581,7 +582,7 @@ void Project::keyPressed(ofKeyEventArgs& key)
 {
     if (ofGetKeyPressed(OF_KEY_COMMAND))
     {
-        if ('r' == key.key)
+        if ('x' == key.key)
         {
             std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
@@ -597,6 +598,18 @@ void Project::keyPressed(ofKeyEventArgs& key)
                 
                 ++iter;
             }
+        }
+        else if ('t')
+        {
+            _transform = TRANSLATE;
+        }
+        else if ('r')
+        {
+            _transform = ROTATE;
+        }
+        else if ('s')
+        {
+            _transform = SCALE;
         }
         else if (OF_KEY_DEL == key.key || OF_KEY_BACKSPACE == key.key)
         {

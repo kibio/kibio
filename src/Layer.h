@@ -59,12 +59,14 @@ public:
     /// \returns true if point is inside the layer
     bool hitTest(const ofPoint& point) const;
     
-//    bool globalHitTest(const ofPoint& point) const;
-    
     /// \brief Get the corner at mouse position
     /// \param mouse The point to test the hit with
     /// \returns pointer to corner if mouse is inside, nullptr if not
     const ofPoint* getHoveredCorner(const ofPoint& mouse) const;
+    
+    /// \brief Get the centroid of the layer
+    /// \returns ofPoint shared pointer representing the centroid of the layer
+    const ofPoint getCentroid() const;
 
     /// \brief Get the screen point in layer space coordinates
     /// \param point point in screen space

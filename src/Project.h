@@ -44,6 +44,13 @@ namespace Kibio {
 class Project
 {
 public:
+    
+    enum TransformType {
+        TRANSLATE,
+        ROTATE,
+        SCALE
+    };
+    
     /// \brief Create a project.
     /// \param parent A reference to the Project's parent.
     Project(AbstractApp& parent);
@@ -140,6 +147,8 @@ public:
 private:
     /// \brief A reference to the project's parent.
     AbstractApp& _parent;
+    
+    TransformType _transform;
 
     /// \brief true iff the project is loaded.
     bool _isLoaded;
