@@ -92,21 +92,36 @@ void Project::draw()
         
         if (_transform == TRANSLATE)
         {
-            ofLine(_dragStart, mouse);
+            ofDrawLine(_dragStart, mouse);
         }
         else if (_transform == ROTATE)
         {
             ofPoint centroid = _dragging->getCentroid();
 
             float radius = 70;
-            ofPoint deltaVec = (mouse - centroid).normalize();
+            ofVec2f deltaVec = (mouse - centroid).normalize();
             deltaVec *= radius;
-            ofPoint newPoint = deltaVec + centroid;
+            ofVec2f newPoint = deltaVec + centroid;
             
-            ofCircle(centroid, 10);
-            ofLine(centroid, newPoint);
+            ofVec2f startDeltaVec = (_dragStart - centroid).normalize();
+            startDeltaVec *= radius;
+            ofVec2f startPoint = startDeltaVec + centroid;
+            
+            int angle = -(deltaVec.angle(_dragStart - centroid));
+            
+//            ofPath path;
+//            path.setColor(ofColor(255, 255, 0));
+//            path.moveTo(centroid);
+//            path.arc(centroid, radius, radius, startAngle, stopAngle);
+//            path.close();
+//            ofFill();
+//            path.draw();
+            
+            ofDrawCircle(centroid, 10);
+            ofDrawLine(centroid, newPoint);
+            ofDrawLine(centroid, startPoint);
             ofNoFill();
-            ofCircle(centroid, radius);
+            ofDrawCircle(centroid, radius);
             ofFill();
         }
         else if (_transform == SCALE)
