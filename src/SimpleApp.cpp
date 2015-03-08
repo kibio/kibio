@@ -401,39 +401,6 @@ void SimpleApp::saveSettings()
 }
 
 
-Json::Value SimpleApp::toJSON(const SimpleApp& object)
-{
-    Json::Value json;
-
-    switch (object._mode)
-    {
-        case EDIT:
-            json["mode"] = "edit";
-            break;
-        case PRESENT:
-            json["mode"] = "present";
-            break;
-    }
-
-    json["paths"]["projects"] = object.getUserProjectsPath().toString();
-
-    json["version"] = object._version;
-
-    if (object._currentProject && object._currentProject->isLoaded())
-    {
-        json["project"] = object._currentProject->getName();
-    }
-
-    json["screen"]["x"] = ofGetWindowPositionX();
-    json["screen"]["y"] = ofGetWindowPositionY();
-    json["screen"]["width"] = ofGetWindowWidth();
-    json["screen"]["height"] = ofGetWindowHeight();
-    json["screen"]["fullscreen"] = (ofGetWindowMode() == OF_FULLSCREEN);
-
-    return json;
-}
-
-
 bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 {
     std::string mode = json.get("mode", "edit").asString();
@@ -447,7 +414,7 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
         object._mode = PRESENT;
     }
 
-  #ifdef OF_TARGET_LINUX
+#ifdef OF_TARGET_LINUX
     Poco::Path defaultUserProjectsPath(Poco::Path::home(), Poco::Path(DEFAULT_USER_PROJECTS_PATH));
 #else
     Poco::Path defaultUserProjectsPath(Poco::Path::home(), Poco::Path("Documents/", DEFAULT_USER_PROJECTS_PATH));
@@ -478,12 +445,45 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 
         ofSetWindowShape(json["screen"].get("width", 640).asInt(),
                          json["screen"].get("height", 480).asInt());
-
+        
         ofSetFullscreen(json["screen"].get("fullscreen", false).asBool());
     }
-
-
+    
+    
     return true;
+}
+
+
+Json::Value SimpleApp::toJSON(const SimpleApp& object)
+{
+    Json::Value json;
+
+    switch (object._mode)
+    {
+        case EDIT:
+            json["mode"] = "edit";
+            break;
+        case PRESENT:
+            json["mode"] = "present";
+            break;
+    }
+
+    json["paths"]["projects"] = object.getUserProjectsPath().toString();
+
+    json["version"] = object._version;
+
+    if (object._currentProject && object._currentProject->isLoaded())
+    {
+        json["project"] = object._currentProject->getName();
+    }
+
+    json["screen"]["x"] = ofGetWindowPositionX();
+    json["screen"]["y"] = ofGetWindowPositionY();
+    json["screen"]["width"] = ofGetWindowWidth();
+    json["screen"]["height"] = ofGetWindowHeight();
+    json["screen"]["fullscreen"] = (ofGetWindowMode() == OF_FULLSCREEN);
+    
+    return json;
 }
 
 

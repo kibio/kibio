@@ -92,6 +92,17 @@ public:
         SETTINGS_VERSION = 0
     };
 
+    /// \brief Load the object from JSON.
+    /// \param json the object as JSON.
+    /// \param object the object to load from JSON.
+    /// \returns true iff successful.
+    static bool fromJSON(const Json::Value& json, SimpleApp& object);
+
+    /// \brief Save the object to JSON.
+    /// \param The object to save.
+    /// \returns the object as JSON.
+    static Json::Value toJSON(const SimpleApp& object);
+
     /// \brief The path for the default settings, relative to bin/data.
     static const std::string DEFAULT_SETTINGS_PATH;
 
@@ -110,16 +121,6 @@ public:
     /// \brief The default name for the default project.
     static const std::string DEFAULT_PROJECT;
 
-    /// \brief Save the object to JSON.
-    /// \brief The object to save.
-    /// \returns the object as JSON.
-    static Json::Value toJSON(const SimpleApp& object);
-
-    /// \brief Load the object from JSON.
-    /// \brief json the object as JSON.
-    /// \brief object the object to load from JSON.
-    /// \returns true iff successful.
-    static bool fromJSON(const Json::Value& json, SimpleApp& object);
 
     bool makeRelativeToUserProjectsFolder(Poco::Path& path) const
     {
