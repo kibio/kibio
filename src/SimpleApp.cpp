@@ -1,6 +1,7 @@
 // =============================================================================
 //
 // Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +36,7 @@ namespace Kibio {
 
 const std::string SimpleApp::DEFAULT_SETTINGS_PATH("defaults/");
 const std::string SimpleApp::DEFAULT_EXAMPLES_PATH("examples/");
+const std::string SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH("templates/TemplateProject");
 const std::string SimpleApp::SETTINGS_FILENAME("settings.json");
 const std::string SimpleApp::USER_SETTINGS_PATH(".kibio/");
 const std::string SimpleApp::DEFAULT_USER_PROJECTS_PATH("Kibio/");
@@ -70,6 +72,7 @@ void SimpleApp::setup()
 
     ofSetFrameRate(60);
     ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetWindowTitle("Kibio");
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
@@ -124,6 +127,18 @@ void SimpleApp::draw()
     {
         ofSetColor(255);
         _kibioLogoMini.draw(10, ofGetHeight() - _kibioLogoMini.getHeight() - 10);
+    
+        std:stringstream str;
+        
+        str << "cmd-e: Toggle Edit Mode\n";
+        str << "cmd-f: Toggle Fullscreen\n";
+        str << "cmd-n: New Project\n";
+        str << "cmd-o: Open Project\n";
+        str << "cmd-s: Save Project\n";
+        str << "cmd-shift-s: Save As Project\n";
+        str << "delete: Delete Video (when hovered)\n";
+        
+        ofDrawBitmapString(str.str(), 15, 15);
     }
 }
 
@@ -134,6 +149,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
     {
         if ('k' == key.key)
         {
+            // is this platform independent?
             ofSystem("open " + getUserProjectsPath().toString());
         }
         else if ('e' == key.key)
@@ -166,7 +182,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
 
                 if (!loadProject(projectName))
                 {
-                    ofSystemAlertDialog("Unable to load project file (?!)");
+                    ofSystemAlertDialog("Unable to load project file.\nAre you sure that is a Kibio project file?");
                 }
             }
             else
@@ -176,7 +192,14 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         else if ('n' == key.key)
         {
-            cout << "new" << endl;
+            
+            std::string result = ofSystemTextBoxDialog("Project Name");
+            
+            if (createProject(result)) {
+                
+            } else {
+                ofSystemAlertDialog("Could not create project.\nMake sure that you do not already have a project by that name.");
+            }
         }
         else if ('s' == key.key)
         {
@@ -232,6 +255,8 @@ Poco::Path SimpleApp::getUserProjectsPath() const
         catch (const Poco::Exception& exc)
         {
             ofLogError("Settings::setup") << exc.displayText();
+            ofSystemAlertDialog("Error: A Kibio projects folder does not exist and one could not be created");
+            
         }
     }
 
@@ -255,28 +280,39 @@ std::shared_ptr<Project> SimpleApp::getCurrentProject()
 {
     return _currentProject;
 }
-
+    
+bool SimpleApp::createProject(const std::string& name)
+{
+    std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
+    if (!project->create(name, SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH)) return false;
+    return loadProject(name, project);
+    
+}
 
 bool SimpleApp::loadProject(const std::string& name)
 {
+    std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
+    return loadProject(name, project);
+}
+
+bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> project)
+{
     // \todo Move this method
 
-    std::shared_ptr<Project> newProject = std::shared_ptr<Project>(new Project(*this));
-
-    if (newProject->load(name))
+    if (project->load(name))
     {
         // if there is an existing project
         if (_currentProject)
         {
-            // saveProject(_currentProject);
+            if (!saveProject()) ofSystemAlertDialog("Error saving current project.");
         }
 
-        _currentProject = newProject;
+        _currentProject = project;
         return true;
     }
     else
     {
-        ofLogError("SimpleApp::loadProject") << "Project: " << name << " does not exist.";
+        ofLogError("SimpleApp::loadProject") << "Project \"" << name << "\" does not exist.";
         return false;
     }
 
@@ -434,6 +470,7 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 
     if (json.isMember("project"))
     {
+        // TODO: load default project if last open project has been deleted
         object.loadProject(json["project"].asString());
     }
 

@@ -1,6 +1,7 @@
 // =============================================================================
 //
 // Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -102,10 +103,12 @@ void Layer::update()
 
             if (!isWarperDestinationSet)
             {
-                int x = (ofGetWidth() - 320) * 0.5;
-                int y = (ofGetHeight() - 240) * 0.5;
-                int w = 320;
-                int h = 240;
+                ofRectangle bounds(0, 0, sW, sH);
+                bounds.scaleTo(ofRectangle(0, 0, 320, 240));
+                int x = (ofGetWidth() - bounds.getWidth()) * 0.5;
+                int y = (ofGetHeight() - bounds.getHeight()) * 0.5;
+                int w = bounds.getWidth();
+                int h = bounds.getHeight();
 
                 _warper.setTopLeftCornerPosition(ofPoint(x, y));
                 _warper.setTopRightCornerPosition(ofPoint(x + w, y));
@@ -209,6 +212,7 @@ void Layer::draw()
     {
         ofPushStyle();
 
+        // TODO: Only when layer is on top
         if (hitTest(mouse))
         {
             ofSetColor(255, 255, 0);
@@ -296,12 +300,12 @@ bool Layer::saveMask()
 {
     if (!_mask)
     {
-        ofLogError("Layer::saveMask") << "There is no mask to save.";
+        ofLogWarning("Layer::saveMask") << "There is no mask to save.";
         return false;
     }
     if (!_maskPath.empty())
     {
-        ofLogError("Layer::saveMask") << "The mask has not been modified.";
+        ofLogWarning("Layer::saveMask") << "The mask has not been modified.";
         return false;
     }
     else
@@ -355,6 +359,7 @@ bool Layer::fromJSON(const Json::Value& json, Layer& object)
 
             if (!object.loadVideo(path))
             {
+                ofLogError("Layer::fromJSON") << "could not load video at " << path;
                 return false;
             }
         }
@@ -374,6 +379,7 @@ bool Layer::fromJSON(const Json::Value& json, Layer& object)
 
             if (!object.loadMask(path))
             {
+                ofLogError("Layer::fromJSON") << "could not load mask at " << path;
                 return false;
             }
         }

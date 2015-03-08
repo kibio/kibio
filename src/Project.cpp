@@ -27,7 +27,6 @@
 #include "Poco/FileStream.h"
 #include "Poco/UTF8String.h"
 
-
 namespace Kibio {
 
 
@@ -115,7 +114,8 @@ void Project::dragEvent(ofDragInfo& dragInfo)
             }
             else
             {
-                cout << "nope" << endl;
+                ofLogError("Project::dragEvent") << relativePath.toString()
+                    << " was not added to this project because it is not located in the project folder";
             }
 
         }
@@ -129,12 +129,15 @@ void Project::dragEvent(ofDragInfo& dragInfo)
             }
             else
             {
-                cout << "nope" << endl;
+                ofLogError("Project::dragEvent") << relativePath.toString()
+                    << " was not added to this project because it is not located in the project folder";
             }
         }
         else
         {
             ofLogError("Project::dragEvent") << "File must be a video or image: " << path.toString() << " : " << mediaType.toString();
+            // TODO: Perhaps this isn't the appropriate place for this
+            ofSystemAlertDialog("Unsupported file type detected.");
         }
     }
 }
@@ -275,14 +278,13 @@ void Project::clearMaskAtPoint(const ofPoint& point)
     }
 }
 
-
 std::shared_ptr<Layer> Project::getLayerAtPoint(const ofPoint& point) const
 {
     std::shared_ptr<Layer> empty;
 
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
 
-    while (iter != _layers.end())
+    while (iter != _layers.begin() - 1)
     {
         if ((*iter))
         {
@@ -292,7 +294,7 @@ std::shared_ptr<Layer> Project::getLayerAtPoint(const ofPoint& point) const
             }
         }
 
-        ++iter;
+        --iter;
     }
 
     return empty;
@@ -335,6 +337,68 @@ bool Project::load(const std::string& name)
     return _isLoaded;
 }
 
+bool Project::create(const std::string& name, const std::string& templateDir) {
+    
+    // template directory folder
+    Poco::File tempDir(ofToDataPath(templateDir));
+    
+    ofLogVerbose("Project::create") << "Copying template directory from \"" << tempDir.path() << "\"";
+    
+    if (tempDir.exists() && tempDir.isDirectory())
+    {
+        Poco::Path newProjectPath(_parent.getUserProjectsPath(), name);
+        Poco::File newProjectFolder(newProjectPath);
+        
+        if (newProjectFolder.exists()) {
+            ofLogError("Project::create") << "\"" << newProjectPath.toString() << "\" already exists";
+            return false;
+        }
+        
+        try {
+            
+            tempDir.copyTo(newProjectPath.toString());
+            
+            // rename the project file
+            Poco::Path projectFilePath(newProjectPath, newProjectPath.getBaseName() + Project::FILE_EXTENSION);
+            Poco::File projectFile(newProjectPath);
+            
+            if (!projectFile.exists()) {
+                ofLogError("Project::create") << "Project file \"" << projectFile.path() << "\" does not exist";
+            }
+            
+            Poco::Path newProjectFilePath(projectFilePath.parent(), name + Project::FILE_EXTENSION);
+        
+            try {
+                
+                projectFile.renameTo(newProjectFilePath.toString());
+                
+                ofLogNotice("Project::create") << "Project \"" << name << "\" created" ;
+                
+                return true;
+            }
+            catch (const Poco::Exception& exc)
+            {
+                ofLogError("Project::load") << exc.displayText();
+                return false;
+            }
+        }
+        catch (const Poco::Exception& exc)
+        {
+            ofLogError("Project::load") << exc.displayText();
+            return false;
+        }
+        
+    }
+    else
+    {
+        
+        ofLogError("Project::create")
+            << "Template Directory \"" << templateDir << "\" does not exist or is not a directory" ;
+        
+        return false;
+    }
+    
+}
 
 bool Project::save()
 {
@@ -493,7 +557,6 @@ bool Project::fromJSON(const Json::Value& json, Project& object)
         }
     }
 
-
     return true;
 }
 
@@ -554,8 +617,8 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 {
     if (_parent.getMode() != AbstractApp::EDIT) return;
 
-//    std::shared_ptr<Layer> layer = getLayerAtPoint(mouse);
-//
+    std::shared_ptr<Layer> layer = getLayerAtPoint(mouse);
+
 //    if (layer)
 //    {
 //        _dragging = layer;
