@@ -65,7 +65,7 @@ public:
     void deleteLayerAtPoint(const ofPoint& point);
     void clearMaskAtPoint(const ofPoint& point);
 
-    std::shared_ptr<Layer> getLayerAtPoint(const ofPoint& point) const;
+    Layer::SharedPtr getLayerAtPoint(const ofPoint& point) const;
 
     /// \brief Load a project by name.
     /// \param name The name of the project in the user's project folder.
@@ -102,7 +102,6 @@ public:
     /// \brief The kibio settings file extension.
     static const std::string FILE_EXTENSION;
 
-
     void keyPressed(ofKeyEventArgs& key);
     void keyReleased(ofKeyEventArgs& key);
 
@@ -122,11 +121,10 @@ private:
     /// \brief The project path.
     Poco::Path _path;
 
-    std::size_t _currentLayer;
-    
-    std::vector<std::shared_ptr<Layer> > _layers;
+    /// \brief The layers.
+    std::vector<Layer::SharedPtr> _layers;
 
-    std::shared_ptr<Layer> _dragging;
+    Layer::SharedPtr _dragging;
     ofPoint _dragStart;
 
     friend class Layer;
