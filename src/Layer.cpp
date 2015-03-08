@@ -391,7 +391,14 @@ void Layer::translate(const ofPoint& delta)
 
 void Layer::rotate(int degrees)
 {
-
+    ofVec2f centroid = getCentroid();
+    
+    for (size_t i = 0; i < 4; ++i)
+    {
+        ofVec2f point = _warper.getTargetPoints()[i];
+        point.rotate(degrees, centroid);
+        _warper.getTargetPoints()[i] = point;
+    }
 }
     
 

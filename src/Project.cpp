@@ -721,12 +721,13 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
         }
         else if (_transform == ROTATE)
         {
-            ofPoint centroid = _layers[_currentLayerIndex]->getCentroid();
-            ofPoint deltaVec = (mouse - centroid).normalize();
+            // these MUST be ofVec2f not ofPoint to allow ofVec2f::angle() to return
+            // negative values. This may be a bug in ofPoint.
+            ofVec2f centroid = _layers[_currentLayerIndex]->getCentroid();
+            ofVec2f deltaVec = mouse - centroid;
             
-            float ang = deltaVec.angleRad((_dragStart - centroid).normalize());
-            cout << ang << endl;
-            _dragging->rotate(ang);
+            int angle = -(deltaVec.angle(_dragStart - centroid));
+            _dragging->rotate(angle);
             
         }
         else if (_transform == SCALE)
