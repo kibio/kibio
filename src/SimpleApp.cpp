@@ -73,7 +73,7 @@ void SimpleApp::setup()
     ofSetFrameRate(60);
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetWindowTitle("Kibio");
-    ofSetCircleResolution(30);
+    ofSetCircleResolution(50);
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");

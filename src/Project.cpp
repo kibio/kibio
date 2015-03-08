@@ -99,13 +99,12 @@ void Project::draw()
             ofPoint centroid = _layers[_currentLayerIndex]->getCentroid();
 
             float radius = 70;
-            ofPoint deltaVec = mouse - centroid;
-            float rad = atan2(deltaVec.x, deltaVec.y) - (PI/2.0);
-            float x = radius * cos(rad) + centroid.x;
-            float y = radius * sin(rad) + centroid.y;
+            ofPoint deltaVec = (mouse - centroid).normalize();
+            deltaVec *= radius;
+            ofPoint newPoint = deltaVec + centroid;
             
             ofCircle(centroid, 10);
-            ofLine(centroid, ofPoint(x, y));
+            ofLine(centroid, newPoint);
             ofNoFill();
             ofCircle(centroid, radius);
             ofFill();
@@ -715,26 +714,26 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
     {
         ofPoint dragEnd = mouse;
         ofPoint delta = dragEnd - _dragStart;
-        cout << "transform type is " << _transform << endl;
-        for (size_t i = 0; i < 4; ++i)
+        
+        if (_transform == TRANSLATE)
         {
-            if (_transform == TRANSLATE)
-            {
-                _dragging->_warper.getTargetPoints()[i] += delta;
-            }
-            else if (_transform == ROTATE)
-            {
-                // Convert polar to cartesian
-//                ofPoint& point = _dragging->_warper.getTargetPoints()[i];
-//                point.x = point.distance(_layers[_currentLayerIndex]->getCentroid()) * cos(dragEnd.angle(_dragStart));
-//                point.y = point.distance(_layers[_currentLayerIndex]->getCentroid()) * sin(dragEnd.angle(_dragStart));
-//                cout << i << " " << point << endl;
-            }
-            else if (_transform == SCALE)
-            {
-                
-            }
+            _dragging->translate(delta);
         }
+        else if (_transform == ROTATE)
+        {
+            ofPoint centroid = _layers[_currentLayerIndex]->getCentroid();
+            ofPoint deltaVec = (mouse - centroid).normalize();
+            
+            float ang = deltaVec.angleRad((_dragStart - centroid).normalize());
+            cout << ang << endl;
+            _dragging->rotate(ang);
+            
+        }
+        else if (_transform == SCALE)
+        {
+            
+        }
+        
 
         _dragging.reset();
     }

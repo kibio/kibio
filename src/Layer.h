@@ -100,6 +100,15 @@ public:
     /// \brief Clear the layer mask.
     void clearMask();
     
+    /// \brief Translate the layer.
+    void translate(const ofPoint& delta);
+    
+    /// \brief Rotate the layer.
+    void rotate(int degrees);
+    
+    /// \brief Scale the layer.
+    void scale(int mult);
+    
     const Poco::UUID getId() const;
 
     /// \brief Save the object to JSON.

@@ -381,6 +381,25 @@ void Layer::clearMask()
     _maskDirty = true;
 }
 
+void Layer::translate(const ofPoint& delta)
+{
+    for (size_t i = 0; i < 4; ++i)
+    {
+        _warper.getTargetPoints()[i] += delta;
+    }
+}
+
+void Layer::rotate(int degrees)
+{
+
+}
+    
+
+void Layer::scale(int mult)
+{
+    
+}
+
 
 Json::Value Layer::toJSON(const Layer& object)
 {
