@@ -1,7 +1,7 @@
 // =============================================================================
 //
-// Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
-//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
+// Copyright (c) 2014-2015 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ public:
     /// \brief Get the layer at point.
     /// \param point The point used to get the layer by
     /// \returns The layer at point
-    std::shared_ptr<Layer> getLayerAtPoint(const ofPoint& point) const;
+    Layer::SharedPtr getLayerAtPoint(const ofPoint& point) const;
 
     /// \brief Load a project by name.
     /// \param name The name of the project in the user's project folder.
@@ -134,7 +134,6 @@ public:
     /// \brief The kibio settings file extension.
     static const std::string FILE_EXTENSION;
 
-
     void keyPressed(ofKeyEventArgs& key);
     void keyReleased(ofKeyEventArgs& key);
 
@@ -157,10 +156,12 @@ private:
     Poco::Path _path;
 
     std::size_t _currentLayerIndex;
-    
-    std::vector<std::shared_ptr<Layer> > _layers;
 
-    std::shared_ptr<Layer> _dragging;
+    /// \brief The layers.
+    std::vector<Layer::SharedPtr> _layers;
+
+
+    Layer::SharedPtr _dragging;
     ofPoint _dragStart;
 
     friend class Layer;

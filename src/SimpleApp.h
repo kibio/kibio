@@ -1,7 +1,7 @@
 // =============================================================================
 //
-// Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
-//               2015 Brannon Dorsey <http://brannondorsey.com> (Modifications)
+// Copyright (c) 2014-2015 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -105,6 +105,17 @@ public:
         SETTINGS_VERSION = 0
     };
 
+    /// \brief Load the object from JSON.
+    /// \param json the object as JSON.
+    /// \param object the object to load from JSON.
+    /// \returns true iff successful.
+    static bool fromJSON(const Json::Value& json, SimpleApp& object);
+
+    /// \brief Save the object to JSON.
+    /// \param The object to save.
+    /// \returns the object as JSON.
+    static Json::Value toJSON(const SimpleApp& object);
+
     /// \brief The path for the default settings, relative to bin/data.
     static const std::string DEFAULT_SETTINGS_PATH;
 
@@ -125,17 +136,6 @@ public:
     
     /// \brief The default name for the template project directory.
     static const std::string DEFAULT_TEMPLATE_PROJECT_PATH;
-
-    /// \brief Save the object to JSON.
-    /// \param The object to save.
-    /// \returns the object as JSON.
-    static Json::Value toJSON(const SimpleApp& object);
-
-    /// \brief Load the object from JSON.
-    /// \param json the object as JSON.
-    /// \param object the object to load from JSON.
-    /// \returns true if successful.
-    static bool fromJSON(const Json::Value& json, SimpleApp& object);
 
     bool makeRelativeToUserProjectsFolder(Poco::Path& path) const
     {

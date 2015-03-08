@@ -1,6 +1,7 @@
 // =============================================================================
 //
-// Copyright (c) 2014 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2014-2015 Christopher Baker <http://christopherbaker.net>
+//               2015 Brannon Dorsey <http://brannondorsey.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,18 +46,22 @@ class Project;
 class Layer
 {
 public:
-    
+    /// \brief A typedef for a shared layer.
+    typedef std::shared_ptr<Layer> SharedPtr;
+
     /// \brief Layer constructor.
     /// \param A reference to the layer's project.
     Layer(Project& parent);
+
+    /// \brief Destroy a layer.
     ~Layer();
 
     void update();
     void draw();
 
-    /// \brief Check if the point is inside the layer
-    /// \param point The point to test the hit with
-    /// \returns true if point is inside the layer
+    /// \brief Check if the point is inside the layer.
+    /// \param point The point to test.
+    /// \returns true if point is inside the layer.
     bool hitTest(const ofPoint& point) const;
     
     /// \brief Get the corner at mouse position
@@ -68,9 +73,9 @@ public:
     /// \returns ofPoint shared pointer representing the centroid of the layer
     const ofPoint getCentroid() const;
 
-    /// \brief Get the screen point in layer space coordinates
-    /// \param point point in screen space
-    /// \returns point in layer space
+    /// \brief Get the screen point in layer space coordinates.
+    /// \param point The point in screen space.
+    /// \returns point The point in layer space.
     ofPoint screenToLayer(const ofPoint& point); // const;
     
     /// \brief Get the layer point in screen space coordinates
@@ -78,21 +83,21 @@ public:
     /// \returns point in screen space
     ofPoint layerToScreen(const ofPoint& point); // const;
 
-    /// \brief Load a video into the layer
-    /// \param path path to video file
-    /// \returns true if successful
+    /// \brief Load a video into the layer.
+    /// \param path The path to video file.
+    /// \returns true if loaded successfully.
     bool loadVideo(const std::string& path);
     
-    /// \brief Load a mask for the layer
-    /// \param path path to mask file
-    /// \returns true if successful
+    /// \brief Load a mask for the layer.
+    /// \param path The path to mask file.
+    /// \returns true if loaded successfully.
     bool loadMask(const std::string& path);
     
-    /// \brief Save the mask for the layer
-    /// \returns true if successful
+    /// \brief Save the mask for the layer.
+    /// \returns true if saved successfully.
     bool saveMask();
 
-    /// \brief Clear the layer mask
+    /// \brief Clear the layer mask.
     void clearMask();
     
     const Poco::UUID getId() const;
@@ -103,9 +108,9 @@ public:
     static Json::Value toJSON(const Layer& object);
 
     /// \brief Load the object from JSON.
-    /// \brief json the object as JSON.
-    /// \brief object the object to load from JSON.
-    /// \returns true iff successful.
+    /// \brief json The object as JSON.
+    /// \brief object The object to load from JSON.
+    /// \returns true iff deserialized successfully.
     static bool fromJSON(const Json::Value& json, Layer& object);
 
     /// \brief Save the object to JSON.
@@ -114,9 +119,9 @@ public:
     static Json::Value toJSON(const std::vector<ofPoint>& object);
 
     /// \brief Load the object from JSON.
-    /// \brief json the object as JSON.
-    /// \brief object the object to load from JSON.
-    /// \returns true iff successful.
+    /// \brief json The object as JSON.
+    /// \brief object The object to load from JSON.
+    /// \returns true iff deserialized successfully.
     static bool fromJSON(const Json::Value& json, std::vector<ofPoint>& object);
 
 private:
