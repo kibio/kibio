@@ -29,7 +29,7 @@
 
 int main()
 {
-    ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
+    //ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
 
     ofSetupOpenGL(320, 240, OF_WINDOW);
     ofRunApp(new Kibio::SimpleApp());
