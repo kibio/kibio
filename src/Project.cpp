@@ -724,10 +724,10 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
             else if (_transform == ROTATE)
             {
                 // Convert polar to cartesian
-                ofPoint& point = _dragging->_warper.getTargetPoints()[i];
-                point.x = point.distance(_layers[_currentLayerIndex]->getCentroid()) * cos(dragEnd.angle(_dragStart));
-                point.y = point.distance(_layers[_currentLayerIndex]->getCentroid()) * sin(dragEnd.angle(_dragStart));
-                cout << i << " " << point << endl;
+//                ofPoint& point = _dragging->_warper.getTargetPoints()[i];
+//                point.x = point.distance(_layers[_currentLayerIndex]->getCentroid()) * cos(dragEnd.angle(_dragStart));
+//                point.y = point.distance(_layers[_currentLayerIndex]->getCentroid()) * sin(dragEnd.angle(_dragStart));
+//                cout << i << " " << point << endl;
             }
             else if (_transform == SCALE)
             {
