@@ -86,8 +86,34 @@ void Project::draw()
     {
         ofPoint mouse(ofGetMouseX(), ofGetMouseY());
         ofPushStyle();
+
         ofSetColor(255, 255, 0);
-        ofLine(_dragStart, mouse);
+        
+        if (_transform == TRANSLATE)
+        {
+            ofLine(_dragStart, mouse);
+        }
+        else if (_transform == ROTATE)
+        {
+            ofPoint centroid = _layers[_currentLayerIndex]->getCentroid();
+
+            float radius = 70;
+            ofPoint deltaVec = mouse - centroid;
+            float rad = atan2(deltaVec.x, deltaVec.y) - (PI/2.0);
+            float x = radius * cos(rad) + centroid.x;
+            float y = radius * sin(rad) + centroid.y;
+            
+            ofCircle(centroid, 10);
+            ofLine(centroid, ofPoint(x, y));
+            ofNoFill();
+            ofCircle(centroid, radius);
+            ofFill();
+        }
+        else if (_transform == SCALE)
+        {
+            
+        }
+        
         ofPopStyle();
     }
 }
@@ -599,17 +625,20 @@ void Project::keyPressed(ofKeyEventArgs& key)
                 ++iter;
             }
         }
-        else if ('t')
+        else if ('t' == key.key)
         {
             _transform = TRANSLATE;
+            ofLogVerbose("Project::KeyPressed") << "TransformType TRANSLATE";
         }
-        else if ('r')
+        else if ('r' == key.key)
         {
             _transform = ROTATE;
+            ofLogVerbose("Project::KeyPressed") << "TransformType ROTATE";
         }
-        else if ('s')
+        else if ('s' == key.key)
         {
             _transform = SCALE;
+            ofLogVerbose("Project::KeyPressed") << "TransformType SCALE";
         }
         else if (OF_KEY_DEL == key.key || OF_KEY_BACKSPACE == key.key)
         {
@@ -650,6 +679,8 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     if (layer)
     {
+        _currentLayerIndex = std::find(_layers.begin(), _layers.end(), layer) - _layers.begin();
+        
         // check if this is already the top layer, if so ignore
         if (layer->getId() != _layers[_layers.size() - 1]->getId())
         {
@@ -683,10 +714,25 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
     {
         ofPoint dragEnd = mouse;
         ofPoint delta = dragEnd - _dragStart;
-
+        cout << "transform type is " << _transform << endl;
         for (size_t i = 0; i < 4; ++i)
         {
-            _dragging->_warper.getTargetPoints()[i] += delta;
+            if (_transform == TRANSLATE)
+            {
+                _dragging->_warper.getTargetPoints()[i] += delta;
+            }
+            else if (_transform == ROTATE)
+            {
+                // Convert polar to cartesian
+                ofPoint& point = _dragging->_warper.getTargetPoints()[i];
+                point.x = point.distance(_layers[_currentLayerIndex]->getCentroid()) * cos(dragEnd.angle(_dragStart));
+                point.y = point.distance(_layers[_currentLayerIndex]->getCentroid()) * sin(dragEnd.angle(_dragStart));
+                cout << i << " " << point << endl;
+            }
+            else if (_transform == SCALE)
+            {
+                
+            }
         }
 
         _dragging.reset();

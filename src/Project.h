@@ -156,7 +156,7 @@ private:
     /// \brief The project path.
     Poco::Path _path;
 
-    std::size_t _currentLayer;
+    std::size_t _currentLayerIndex;
     
     std::vector<std::shared_ptr<Layer> > _layers;
 
