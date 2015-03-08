@@ -43,6 +43,8 @@ class Project;
 class Layer
 {
 public:
+    typedef std::shared_ptr<Layer> SharedPtr;
+
     Layer(Project& parent);
     ~Layer();
 
