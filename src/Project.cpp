@@ -96,7 +96,7 @@ void Project::draw()
         }
         else if (_transform == ROTATE)
         {
-            ofPoint centroid = _layers[_currentLayerIndex]->getCentroid();
+            ofPoint centroid = _dragging->getCentroid();
 
             float radius = 70;
             ofPoint deltaVec = (mouse - centroid).normalize();
@@ -679,7 +679,6 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     if (layer)
     {
-        _currentLayerIndex = std::find(_layers.begin(), _layers.end(), layer) - _layers.begin();
         
         // check if this is already the top layer, if so ignore
         if (layer->getId() != _layers[_layers.size() - 1]->getId())
@@ -723,7 +722,7 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
         {
             // these MUST be ofVec2f not ofPoint to allow ofVec2f::angle() to return
             // negative values. This may be a bug in ofPoint.
-            ofVec2f centroid = _layers[_currentLayerIndex]->getCentroid();
+            ofVec2f centroid = _dragging->getCentroid();
             ofVec2f deltaVec = mouse - centroid;
             
             int angle = -(deltaVec.angle(_dragStart - centroid));

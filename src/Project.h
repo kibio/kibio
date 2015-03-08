@@ -155,11 +155,8 @@ private:
     /// \brief The project path.
     Poco::Path _path;
 
-    std::size_t _currentLayerIndex;
-
     /// \brief The layers.
     std::vector<Layer::SharedPtr> _layers;
-
 
     Layer::SharedPtr _dragging;
     ofPoint _dragStart;
