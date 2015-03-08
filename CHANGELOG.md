@@ -3,6 +3,7 @@
 ## v0.2.0
 (upcoming)
 
+- Video layers may now be rotated.
 - Video layers may now be dragged as a whole.
 - Video layers are now moved to the front when they are clicked.
 - Video layers now are created at the correct aspect ratio of the video. 
