@@ -221,7 +221,7 @@ void Layer::draw()
         std::shared_ptr<Layer> layer = _parent.getLayerAtPoint(mouse);
         
         // TODO: Only when layer is on top
-        if (layer && layer->getId() == getId())
+        if (layer && !_parent._dragging && layer->getId() == getId())
         {
             ofSetColor(_highlightColor);
         }
