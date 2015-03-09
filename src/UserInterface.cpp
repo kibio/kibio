@@ -59,7 +59,6 @@ void ImageButton::update(const ofPoint& mouse)
 {
     if (_rect.inside(mouse))
     {
-        cout << "hovered" << endl;
         _bHovered = true;
     }
     else
@@ -131,7 +130,7 @@ _shadowColor(ofColor(30, 120, 165)),
 _bDrawIconShadows(true),
 _iconPadding(10),
 _iconSize(30),
-_shadowOffset(ofVec2f(2, 2)),
+_shadowOffset(ofVec2f(1, 1)),
 _openProjectButton(ImageButton("images/archive.png", BUTTON_OPEN_PROJECT, _color, _highlightColor, _shadowColor)),
 _newProjectButton(ImageButton("images/plus.png", BUTTON_NEW_PROJECT, _color, _highlightColor, _shadowColor)),
 _saveProjectButton(ImageButton("images/save.png", BUTTON_SAVE_PROJECT, _color, _highlightColor, _shadowColor)),
@@ -191,10 +190,11 @@ void UserInterface::placeIcons()
     int w = ofGetWidth();
     int h = ofGetHeight();
     
-    // top right
+ 
     int x = w - _iconPadding - _iconSize;
     int y = _iconPadding;
     
+    // top right
     _toolScaleButton.set(x, y, _iconSize, _iconSize);
     x -= _iconSize + _iconPadding;
     
@@ -205,12 +205,26 @@ void UserInterface::placeIcons()
     x -= _iconSize + _iconPadding * 2; // place brush further to left
     
     _toolBrushButton.set(x, y, _iconSize, _iconSize);
+
+    // bottom left
+    x = w - _iconPadding - _iconSize;
+    y = h - _iconPadding - _iconSize;
     
-    _openProjectButton;
-    _newProjectButton;
-    _saveProjectButton;
-    _infoButton;
-    _toggleModeButton;
+    _toggleModeButton.set(x, y, _iconSize, _iconSize);
+    x -= _iconSize + _iconPadding;
+    
+    _infoButton.set(x, y, _iconSize, _iconSize);
+    
+    // bottom left
+    x = _iconSize * 3;
+    
+    _newProjectButton.set(x, y, _iconSize, _iconSize);
+    x -= _iconSize + _iconPadding;
+    
+    _openProjectButton.set(x, y, _iconSize, _iconSize);
+    x -= _iconSize + _iconPadding;
+    
+    _saveProjectButton.set(x, y, _iconSize, _iconSize);
     
 }
 

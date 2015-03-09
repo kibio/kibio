@@ -130,20 +130,20 @@ void SimpleApp::draw()
 
     if (EDIT == _mode)
     {
-        ofSetColor(255);
-        _kibioLogoMini.draw(10, ofGetHeight() - _kibioLogoMini.getHeight() - 10);
-    
-        std:stringstream str;
-        
-        str << "cmd-e: Toggle Edit Mode\n";
-        str << "cmd-f: Toggle Fullscreen\n";
-        str << "cmd-n: New Project\n";
-        str << "cmd-o: Open Project\n";
-        str << "cmd-s: Save Project\n";
-        str << "cmd-shift-s: Save As Project\n";
-        str << "delete: Delete Video (when hovered)\n";
-        
-        ofDrawBitmapString(str.str(), 15, 15);
+//        ofSetColor(255);
+//        _kibioLogoMini.draw(10, ofGetHeight() - _kibioLogoMini.getHeight() - 10);
+//    
+//        std:stringstream str;
+//        
+//        str << "cmd-e: Toggle Edit Mode\n";
+//        str << "cmd-f: Toggle Fullscreen\n";
+//        str << "cmd-n: New Project\n";
+//        str << "cmd-o: Open Project\n";
+//        str << "cmd-s: Save Project\n";
+//        str << "cmd-shift-s: Save As Project\n";
+//        str << "delete: Delete Video (when hovered)\n";
+//        
+//        ofDrawBitmapString(str.str(), 15, 15);
     }
     
     if (_ui.isVisible())
