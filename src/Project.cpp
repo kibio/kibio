@@ -92,41 +92,15 @@ void Project::draw()
         
         if (_transform == TRANSLATE)
         {
-            ofDrawLine(_dragStart, mouse);
+            _dragging->drawTranslatePreview(mouse, _dragStart);
         }
         else if (_transform == ROTATE)
         {
-            ofPoint centroid = _dragging->getCentroid();
-
-            float radius = 70;
-            ofVec2f deltaVec = (mouse - centroid).normalize();
-            deltaVec *= radius;
-            ofVec2f newPoint = deltaVec + centroid;
-            
-            ofVec2f startDeltaVec = (_dragStart - centroid).normalize();
-            startDeltaVec *= radius;
-            ofVec2f startPoint = startDeltaVec + centroid;
-            
-            int angle = -(deltaVec.angle(_dragStart - centroid));
-            
-//            ofPath path;
-//            path.setColor(ofColor(255, 255, 0));
-//            path.moveTo(centroid);
-//            path.arc(centroid, radius, radius, startAngle, stopAngle);
-//            path.close();
-//            ofFill();
-//            path.draw();
-            
-            ofDrawCircle(centroid, 10);
-            ofDrawLine(centroid, newPoint);
-            ofDrawLine(centroid, startPoint);
-            ofNoFill();
-            ofDrawCircle(centroid, radius);
-            ofFill();
+            _dragging->drawRotatePreview(mouse, _dragStart);
         }
         else if (_transform == SCALE)
         {
-            
+            _dragging->drawScalePreview(mouse, _dragStart);
         }
         
         ofPopStyle();
@@ -746,9 +720,11 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
         }
         else if (_transform == SCALE)
         {
-            
+            ofVec2f centroid = _dragging->getCentroid();
+            ofVec2f deltaVec = mouse - centroid;
+            float mult = centroid.distance(mouse) / centroid.distance(_dragStart);
+            _dragging->scale(mult);
         }
-        
 
         _dragging.reset();
     }

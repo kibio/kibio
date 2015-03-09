@@ -58,6 +58,21 @@ public:
 
     void update();
     void draw();
+    
+    /// \brief Draw the translation preview
+    /// \param mouse The mouse position
+    /// \param dragStart The position where the drag began
+    void drawTranslatePreview(const ofPoint& mouse, const ofPoint& dragStart);
+    
+    /// \brief Draw the scale preview
+    /// \param mouse The mouse position
+    /// \param dragStart The position where the drag began
+    void drawScalePreview(const ofPoint& mouse, const ofPoint& dragStart);
+    
+    /// \brief Draw the rotation preview
+    /// \param mouse The mouse position
+    /// \param dragStart The position where the drag began
+    void drawRotatePreview(const ofPoint& mouse, const ofPoint& dragStart);
 
     /// \brief Check if the point is inside the layer.
     /// \param point The point to test.
@@ -101,13 +116,16 @@ public:
     void clearMask();
     
     /// \brief Translate the layer.
+    /// \param delta The change by which to translate by expressed as a vector
     void translate(const ofPoint& delta);
     
     /// \brief Rotate the layer.
+    /// \param degrees The rotation in degrees
     void rotate(int degrees);
     
     /// \brief Scale the layer.
-    void scale(int mult);
+    /// \param mult The multiplier by which to scale by
+    void scale(float mult);
     
     const Poco::UUID getId() const;
 

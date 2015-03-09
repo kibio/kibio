@@ -139,7 +139,7 @@ void Layer::update()
         }
         else
         {
-            ofRect(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
+            ofDrawRectangle(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
         }
         ofPopStyle();
         _maskSurface.end();
@@ -232,22 +232,108 @@ void Layer::draw()
         
         _warper.drawQuadOutline();
         
-        ofPoint* corners = _warper.getTargetPoints();
+        const ofPoint* corners = _warper.getTargetPoints();
         for (std::size_t i = 0; i < 4; ++i) {
-            ofCircle(corners[i], 6);
+            ofDrawCircle(corners[i], 6);
         }
         
         const ofPoint* hoveredCorner = getHoveredCorner(mouse);
         if (hoveredCorner) {
             ofSetColor(_highlightColor);
-            ofCircle(*hoveredCorner, 6);
+            ofDrawCircle(*hoveredCorner, 6);
         }
 
         ofPopStyle();
         
     }
 }
+    
+    
+void Layer::drawTranslatePreview(const ofPoint& mouse, const ofPoint& dragStart)
+{
+    ofPoint delta = dragStart - mouse;
+    const ofPoint* corners = _warper.getTargetPoints();
+    ofPolyline polyline;
 
+    for (std::size_t i = 0; i < 4; ++i)
+    {
+        polyline.addVertex(corners[i] - delta);
+    }
+    
+    polyline.close();
+    
+    ofPushStyle();
+    ofSetColor(_highlightColor);
+    polyline.draw();
+    ofDrawLine(mouse, dragStart);
+    ofPopStyle();
+}
+    
+    
+void Layer::drawRotatePreview(const ofPoint &mouse, const ofPoint &dragStart)
+{
+    ofPoint centroid = getCentroid();
+    const ofPoint* corners = _warper.getTargetPoints();
+    
+    float radius = 30;
+    ofVec2f deltaVec = (mouse - centroid).normalize();
+    deltaVec *= radius;
+    ofVec2f newPoint = deltaVec + centroid;
+    
+    ofVec2f startDeltaVec = (dragStart - centroid).normalize();
+    startDeltaVec *= radius;
+    ofVec2f startPoint = startDeltaVec + centroid;
+    
+    int angle = - (deltaVec.angle(dragStart - centroid));
+    
+    ofPolyline polyline;
+    
+    ofPushStyle();
+    
+    ofSetColor(_highlightColor);
+    ofDrawCircle(centroid, 5);
+    ofDrawLine(centroid, newPoint);
+    ofDrawLine(centroid, startPoint);
+    ofNoFill();
+    ofDrawCircle(centroid, radius);
+    
+    for (size_t i = 0; i < 4; ++i)
+    {
+        ofVec2f point = corners[i];
+        point.rotate(angle, centroid);
+        polyline.addVertex(point);
+    }
+
+    polyline.close();
+    polyline.draw();
+    
+    ofPopStyle();
+}
+
+void Layer::drawScalePreview(const ofPoint& mouse, const ofPoint& dragStart)
+{
+    ofVec2f centroid = getCentroid();
+    const ofPoint* corners = _warper.getTargetPoints();
+    float mult = centroid.distance(mouse) / centroid.distance(dragStart);
+    ofPolyline polyline;
+
+    for (std::size_t i = 0; i < 4; ++i)
+    {
+        ofVec2f diff = centroid - corners[i];
+        float length = diff.length();
+        diff.normalize();
+        diff *= length * mult;
+        polyline.addVertex(-diff + centroid);
+    }
+    
+    polyline.close();
+    
+    ofPushStyle();
+    ofSetColor(_highlightColor);
+    polyline.draw();
+    ofPopStyle();
+    
+}
 
 bool Layer::hitTest(const ofPoint& point) const
 {
@@ -402,9 +488,19 @@ void Layer::rotate(int degrees)
 }
     
 
-void Layer::scale(int mult)
+void Layer::scale(float mult)
 {
+    ofVec2f centroid = getCentroid();
+    ofPoint* corners = _warper.getTargetPoints();
     
+    for (std::size_t i = 0; i < 4; ++i)
+    {
+        ofVec2f diff = centroid - corners[i];
+        float length = diff.length();
+        diff.normalize();
+        diff *= length * mult;
+        corners[i] = -diff + centroid;
+    }
 }
 
 
