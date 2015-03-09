@@ -191,7 +191,10 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         {
             
             std::string result = ofSystemTextBoxDialog("Project Name");
-            createProject(result);
+            if (!result.empty())
+            {
+                createProject(result);
+            }
         }
         else if ('s' == key.key)
         {
@@ -200,14 +203,16 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
                 if (ofGetKeyPressed(OF_KEY_SHIFT))
                 {
                     std::string result = ofSystemTextBoxDialog("Project Name");
-                    saveProjectAs(result);
+                    if (!result.empty())
+                    {
+                        saveProjectAs(result);
+                    }
                 }
                 else
                 {
                     _currentProject->save();
                 }
             }
-
         }
     }
 }
