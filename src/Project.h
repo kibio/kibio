@@ -103,7 +103,12 @@ public:
     bool create(const std::string& name, const std::string& templateDir);
 
     /// \brief Save a project.
+    /// \returns true if project was saved successfully
     bool save();
+    
+    /// \brief Save As a project.
+    /// \returns true if project was saved successfully
+    bool saveAs(const std::string& name);
 
     /// \returns true if project is loaded.
     bool isLoaded() const;

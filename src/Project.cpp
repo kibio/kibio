@@ -451,7 +451,48 @@ bool Project::save()
         return false;
     }
 }
-
+    
+bool Project::saveAs(const std::string& name)
+{
+    
+    Poco::Path newProjectFolderPath(_path.parent(), name);
+    Poco::File newProjectFolderFile(newProjectFolderPath);
+    
+    if (newProjectFolderFile.exists())
+    {
+        ofLogError("Project::saveAs") << newProjectFolderPath.toString() << " already exists";
+        return false;
+    }
+    
+    Poco::File oldProjectFolderFile(_path);
+    
+    try
+    {
+        oldProjectFolderFile.copyTo(newProjectFolderPath.toString());
+        
+        Poco::Path settingsFilePath(newProjectFolderPath, getName() + FILE_EXTENSION);
+        Poco::Path newSettingsFilePath(newProjectFolderPath, name + FILE_EXTENSION);
+        Poco::File settingsFile(settingsFilePath);
+        
+        try
+        {
+            settingsFile.renameTo(newSettingsFilePath.toString());
+            return true;
+        }
+        catch (const Poco::Exception& exc)
+        {
+            ofLogError("Project::saveAs") << "Could not copy " << settingsFile.path()
+            << " to " << newProjectFolderPath.toString() << name << FILE_EXTENSION << " " << exc.displayText();
+            return false;
+        }
+    }
+    catch (const Poco::Exception& exc)
+    {
+        ofLogError("Project::saveAs") << "Could not copy " << oldProjectFolderFile.path()
+            << " to " << newProjectFolderPath.toString() << " " << exc.displayText();
+        return false;
+    }
+}
 
 bool Project::isLoaded() const
 {

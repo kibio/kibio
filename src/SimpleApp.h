@@ -95,7 +95,8 @@ public:
     /// \brief Save the current project.
     bool saveProject();
 
-//    void saveProjectAs(const std::string& path);
+    /// \brief Save As the current project.
+    bool saveProjectAs(const std::string& name);
 
     bool onLoggerEvent(const LoggerEventArgs& e);
 

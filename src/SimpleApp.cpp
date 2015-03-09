@@ -180,11 +180,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
             if (result.bSuccess && makeRelativeToUserProjectsFolder(relativePath))
             {
                 std::string projectName = relativePath.getBaseName();
-
-                if (!loadProject(projectName))
-                {
-                    ofSystemAlertDialog("Unable to load project file.\nAre you sure that is a Kibio project file?");
-                }
+                loadProject(projectName);
             }
             else
             {
@@ -195,12 +191,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         {
             
             std::string result = ofSystemTextBoxDialog("Project Name");
-            
-            if (createProject(result)) {
-                
-            } else {
-                ofSystemAlertDialog("Could not create project.\nMake sure that you do not already have a project by that name.");
-            }
+            createProject(result);
         }
         else if ('s' == key.key)
         {
@@ -208,12 +199,8 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
             {
                 if (ofGetKeyPressed(OF_KEY_SHIFT))
                 {
-                    ofFileDialogResult result = ofSystemSaveDialog("Untitled", "Save Project As ...");
-
-                    if (result.bSuccess)
-                    {
-                        cout << "saving as " << result.getPath() << " : " << result.getName() << endl;
-                    }
+                    std::string result = ofSystemTextBoxDialog("Project Name");
+                    saveProjectAs(result);
                 }
                 else
                 {
@@ -285,9 +272,12 @@ std::shared_ptr<Project> SimpleApp::getCurrentProject()
 bool SimpleApp::createProject(const std::string& name)
 {
     std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
-    if (!project->create(name, SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH)) return false;
-    return loadProject(name, project);
-    
+    if (!project->create(name, SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH)) {
+        ofSystemAlertDialog("Could not create project.\nMake sure that you do not already have a project by that name.");
+        return false;
+    } else {
+        return loadProject(name, project);
+    }
 }
 
 bool SimpleApp::loadProject(const std::string& name)
@@ -314,6 +304,7 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
     else
     {
         ofLogError("SimpleApp::loadProject") << "Project \"" << name << "\" does not exist.";
+        ofSystemAlertDialog("Error loading project. Are you sure that is a \".kibio\" file?");
         return false;
     }
 
@@ -339,9 +330,23 @@ bool SimpleApp::saveProject()
 }
 
 
-//bool SimpleApp::saveProjectAs(const std::string& path)
-//{
-//}
+bool SimpleApp::saveProjectAs(const std::string& name)
+{
+    if (_currentProject)
+    {
+        if (!_currentProject->saveAs(name))
+        {
+            ofSystemAlertDialog("Could not Save As project.\nMake sure that you do not already have a project by that name.");
+            return false;
+        }
+        
+        return loadProject(name);
+    }
+    else
+    {
+        return false;
+    }
+}
 
 void SimpleApp::loadSettings()
 {
