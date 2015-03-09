@@ -50,6 +50,43 @@ public:
     
     UIButtonType type;
 };
+    
+/// \brief A an image button
+class ImageButton
+{
+public:
+    ImageButton(const std::string& imagePath,
+                UIButtonType _type,
+                ofColor color,
+                ofColor highlightColor,
+                ofColor shadowColor);
+    
+    ~ImageButton();
+    
+    void set(int x, int y, int width, int height);
+    void update(const ofPoint& mouse);
+    void draw(const ofPoint& shadowOffset=ofPoint::zero());
+    
+    void select();
+    void unselect();
+    void setSelected(bool b);
+    
+    bool isSelected();
+    bool isHovered();
+    
+    UIButtonType type;
+    
+protected:
+    
+    bool _bSelected;
+    bool _bHovered;
+    
+    ofColor _color;
+    ofColor _highlightColor;
+    ofColor _shadowColor;
+    ofTexture _texture;
+    ofRectangle _rect;
+};
 
 /// \brief A class for managing the user interface
 class UserInterface
@@ -62,11 +99,13 @@ public:
     void update();
     void draw();
     
+    void placeIcons();
     void toggleVisible();
     void hide();
     void show();
     
     void setProjectName(const std::string& name);
+    void setDrawIconShadows(bool drawIconShadows);
     
     bool isVisible() const;
     
@@ -74,6 +113,30 @@ public:
 
 protected:
 
+    bool _bDrawIconShadows;
+    bool _bVisible;
+    
+    int _iconPadding;
+    int _iconSize;
+    
+    std::string _projectName;
+    
+    ofVec2f _shadowOffset;
+    
+    ofColor _color;
+    ofColor _highlightColor;
+    ofColor _shadowColor;
+
+    ImageButton _openProjectButton;
+    ImageButton _newProjectButton;
+    ImageButton _saveProjectButton;
+    ImageButton _infoButton;
+    ImageButton _toggleModeButton;
+    ImageButton _toolBrushButton;
+    ImageButton _toolTranslateButton;
+    ImageButton _toolRotateButton;
+    ImageButton _toolScaleButton;
+    
 };
     
 } // namespace Kibio

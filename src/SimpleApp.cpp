@@ -73,12 +73,15 @@ void SimpleApp::setup()
     ofSetFrameRate(60);
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetWindowTitle("Kibio");
+    ofEnableAntiAliasing();
+    ofEnableTextureEdgeHack();
     ofSetCircleResolution(50);
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
 
     loadSettings();
+    _ui.placeIcons();
 }
 
 void SimpleApp::exit()
@@ -101,6 +104,7 @@ void SimpleApp::update()
     {
         _currentProject->update();
     }
+    _ui.update();
 }
 
 
@@ -140,6 +144,11 @@ void SimpleApp::draw()
         str << "delete: Delete Video (when hovered)\n";
         
         ofDrawBitmapString(str.str(), 15, 15);
+    }
+    
+    if (_ui.isVisible())
+    {
+        _ui.draw();
     }
 }
 
@@ -216,7 +225,11 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
     }
 }
-
+    
+void SimpleApp::windowResized(ofResizeEventArgs &resize)
+{
+    _ui.placeIcons();
+}
 
 AbstractApp::Mode SimpleApp::getMode() const
 {

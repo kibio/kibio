@@ -29,6 +29,7 @@
 
 #include <json/json.h>
 #include "ofMain.h"
+#include "UserInterface.h"
 #include "Project.h"
 #include "AbstractTypes.h"
 #include "EventLoggerChannel.h"
@@ -55,6 +56,7 @@ public:
     void exit();
 
     void keyPressed(ofKeyEventArgs& key);
+    void windowResized(ofResizeEventArgs &resize);
     
     /// \brief Get the current mode.
     Mode getMode() const;
@@ -214,6 +216,8 @@ protected:
 
     /// \brief The settings version.
     int _version;
+    
+    UserInterface _ui;
 
     /// \brief The current project.
     std::shared_ptr<Project> _currentProject;
