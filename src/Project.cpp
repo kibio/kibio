@@ -365,26 +365,30 @@ bool Project::create(const std::string& name, const std::string& templateDir) {
         Poco::Path newProjectPath(_parent.getUserProjectsPath(), name);
         Poco::File newProjectFolder(newProjectPath);
         
-        if (newProjectFolder.exists()) {
+        if (newProjectFolder.exists())
+        {
             ofLogError("Project::create") << "\"" << newProjectPath.toString() << "\" already exists";
             return false;
         }
         
-        try {
+        try
+        {
             
             tempDir.copyTo(newProjectPath.toString());
             
             // rename the project file
-            Poco::Path projectFilePath(newProjectPath, newProjectPath.getBaseName() + Project::FILE_EXTENSION);
-            Poco::File projectFile(newProjectPath);
+            Poco::Path projectFilePath(newProjectPath, "TemplateProject" + Project::FILE_EXTENSION);
+            Poco::File projectFile(projectFilePath);
             
             if (!projectFile.exists()) {
                 ofLogError("Project::create") << "Project file \"" << projectFile.path() << "\" does not exist";
+                return false;
             }
             
             Poco::Path newProjectFilePath(projectFilePath.parent(), name + Project::FILE_EXTENSION);
-        
-            try {
+            
+            try
+            {
                 
                 projectFile.renameTo(newProjectFilePath.toString());
                 
@@ -394,13 +398,13 @@ bool Project::create(const std::string& name, const std::string& templateDir) {
             }
             catch (const Poco::Exception& exc)
             {
-                ofLogError("Project::load") << exc.displayText();
+                ofLogError("Project::create") << exc.displayText();
                 return false;
             }
         }
         catch (const Poco::Exception& exc)
         {
-            ofLogError("Project::load") << exc.displayText();
+            ofLogError("Project::create") << exc.displayText();
             return false;
         }
         
