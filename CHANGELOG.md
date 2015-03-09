@@ -3,6 +3,7 @@
 ## v0.2.0
 (upcoming)
 
+- New projects can now be created from inside the app with `cmd-n`.
 - Video layers may now be scaled.
 - Video layers may now be rotated.
 - Video layers may now be dragged as a whole.
