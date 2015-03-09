@@ -30,6 +30,7 @@
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
+		F8D05B7E1AAE2067007A6B61 /* UserInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8D05B7D1AAE2067007A6B61 /* UserInterface.cpp */; };
 		FD276A431A2FE7E5001E59E5 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = FD2769FC1A2FE7E5001E59E5 /* lz4.c */; };
 		FD276A441A2FE7E5001E59E5 /* Base64Encoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD276A241A2FE7E5001E59E5 /* Base64Encoding.cpp */; };
 		FD276A451A2FE7E5001E59E5 /* ByteBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD276A251A2FE7E5001E59E5 /* ByteBuffer.cpp */; };
@@ -118,6 +119,8 @@
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		F0768D1A35182C015F72D280 /* SimpleApp.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = SimpleApp.h; path = src/SimpleApp.h; sourceTree = SOURCE_ROOT; };
+		F8D05B7C1AAE1FFE007A6B61 /* UserInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInterface.h; sourceTree = "<group>"; };
+		F8D05B7D1AAE2067007A6B61 /* UserInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserInterface.cpp; sourceTree = "<group>"; };
 		FD2769E71A2FE5AF001E59E5 /* ofxTaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTaskQueue.h; sourceTree = "<group>"; };
 		FD2769EC1A2FE5AF001E59E5 /* TaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueue.h; sourceTree = "<group>"; };
 		FD2769ED1A2FE5AF001E59E5 /* TaskQueueEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskQueueEvents.h; sourceTree = "<group>"; };
@@ -403,6 +406,8 @@
 			children = (
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				A6A8CD6336CADA9329276DC2 /* AbstractTypes.h */,
+				F8D05B7C1AAE1FFE007A6B61 /* UserInterface.h */,
+				F8D05B7D1AAE2067007A6B61 /* UserInterface.cpp */,
 				977084F2739AA2462F6B9552 /* EventLoggerChannel.cpp */,
 				52DF3BD11068CFC66AD099F9 /* EventLoggerChannel.h */,
 				961049863D8C691271E7D396 /* Layer.cpp */,
@@ -1186,6 +1191,7 @@
 				FD366A631A2EDE1000042F73 /* ofxQuadWarp.cpp in Sources */,
 				FD276A551A2FE7E5001E59E5 /* RecursiveDirectoryIterator.cpp in Sources */,
 				FD366B2D1A2EDE1600042F73 /* ofxCvImage.cpp in Sources */,
+				F8D05B7E1AAE2067007A6B61 /* UserInterface.cpp in Sources */,
 				FD276A561A2FE7E5001E59E5 /* RecursiveDirectoryIteratorStategies.cpp in Sources */,
 				FD276A4E1A2FE7E5001E59E5 /* DirectoryWatcher.cpp in Sources */,
 				FD276A581A2FE7E5001E59E5 /* SearchPath.cpp in Sources */,
