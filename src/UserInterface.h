@@ -93,7 +93,7 @@ protected:
     ofColor _color;
     ofColor _highlightColor;
     ofColor _shadowColor;
-    ofTexture _texture;
+    ofImage _image;
     ofRectangle _rect;
     
     ofEvent<const UserInterfaceEvent>& _buttonSelectEvent;
@@ -139,7 +139,6 @@ public:
     
 protected:
 
-    bool _bDrawIconShadows;
     bool _bVisible;
     
     int _iconPadding;

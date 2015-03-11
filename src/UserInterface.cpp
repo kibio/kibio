@@ -52,7 +52,7 @@ _bEnabled(true)
 {
 
     ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
-    ofLoadImage(_texture, imagePath);
+    _image.load(imagePath);
 }
     
 ImageButton::~ImageButton()
@@ -63,6 +63,7 @@ ImageButton::~ImageButton()
 void ImageButton::set(int x, int y, int width, int height)
 {
     _rect.set(x, y, width, height);
+    _image.resize(width, height);
 }
     
 void ImageButton::update(const ofPoint& mouse)
@@ -85,10 +86,8 @@ void ImageButton::draw(const ofPoint& shadowOffset)
     if (shadowOffset != ofPoint::zero())
     {
         ofSetColor(_shadowColor);
-        _texture.draw(_rect.x + shadowOffset.x,
-                      _rect.y + shadowOffset.y,
-                      _rect.width,
-                      _rect.height);
+        _image.draw(_rect.x + shadowOffset.x,
+                    _rect.y + shadowOffset.y);
     }
     
     if (isHovered() || isSelected() || _bClickSimulated)
@@ -100,7 +99,7 @@ void ImageButton::draw(const ofPoint& shadowOffset)
         ofSetColor(_color);
     }
     
-    _texture.draw(_rect.x, _rect.y, _rect.width, _rect.height);
+    _image.draw(_rect.x, _rect.y);
     
     ofPopStyle();
     
@@ -187,7 +186,6 @@ _backgroundColor(ofColor(0, 174, 239)),
 _color(ofColor(255, 255, 255)),
 _highlightColor(ofColor(255, 255, 0)),
 _shadowColor(ofColor(30, 120, 165)),
-_bDrawIconShadows(true),
 _iconPadding(10),
 _iconSize(30),
 _fontSize(18),
@@ -310,6 +308,13 @@ void UserInterface::draw()
     {
         if (_font.isLoaded() && !_projectName.empty())
         {
+            if (_shadowOffset != ofPoint::zero())
+            {
+                ofSetColor(_shadowColor);
+                _font.drawString(_projectName, _iconPadding + _shadowOffset.x, _fontSize + _iconPadding + _shadowOffset.y);
+                ofSetColor(_color);
+            }
+            
             _font.drawString(_projectName, _iconPadding, _fontSize + _iconPadding);
         }
         
