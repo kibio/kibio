@@ -183,6 +183,7 @@ bool ImageButton::isHovered() const
 // =============================================================================
     
 UserInterface::UserInterface():
+_backgroundColor(ofColor(0, 174, 239)),
 _color(ofColor(255, 255, 255)),
 _highlightColor(ofColor(255, 255, 0)),
 _shadowColor(ofColor(30, 120, 165)),
@@ -266,6 +267,7 @@ _toolScaleButton(ImageButton("images/resize-full-screen.png",
                              _shadowColor))
 {
     _font.load("media/Verdana.ttf", _fontSize);
+    ofLoadImage(_infoSlide, "images/info-slide.png");
     
     ofAddListener(buttonSelectEvent, this,&UserInterface::onButtonSelect);
     ofAddListener(buttonDeselectEvent, this,&UserInterface::onButtonDeselect);
@@ -321,8 +323,43 @@ void UserInterface::draw()
         _toolRotateButton.draw(_shadowOffset);
         _toolScaleButton.draw(_shadowOffset);
     }
-
+    
+    if (_infoButton.isSelected())
+    {
+        drawInfoSlide();
+    }
+    
     ofPopStyle();
+}
+    
+void UserInterface::drawInfoSlide()
+{
+    int x = 0;
+    int y = 0;
+    int w = 0;
+    int h = 0;
+    
+    if (ofGetWidth() > _infoSlide.getWidth() + 200)
+    {
+        x = (ofGetWidth() - _infoSlide.getWidth()) / 2;
+        y = (ofGetHeight() - _infoSlide.getHeight()) / 2;
+        w = _infoSlide.getWidth();
+        h = _infoSlide.getHeight();
+    }
+    else
+    {
+        float aspect = _infoSlide.getWidth() / _infoSlide.getHeight();
+        w = float(min(float(_infoSlide.getWidth()), float(ofGetWidth()* 0.8)));
+        h = w / aspect;
+        x = (ofGetWidth() - w) / 2;
+        y = (ofGetHeight() - h) / 2;
+    }
+    
+    ofFill();
+    ofSetColor(_backgroundColor);
+    ofDrawRectangle(x, y, w, h);
+    ofSetColor(_color);
+    _infoSlide.draw(x, y, w, h);
 }
 
 void UserInterface::placeIcons()

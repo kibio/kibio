@@ -110,6 +110,7 @@ public:
     
     void update();
     void draw();
+    void drawInfoSlide();
     
     void placeIcons();
     void toggleVisible();
@@ -150,10 +151,13 @@ protected:
     ofVec2f _shadowOffset;
     
     ofColor _color;
+    ofColor _backgroundColor;
     ofColor _highlightColor;
     ofColor _shadowColor;
     
     ofTrueTypeFont _font;
+    
+    ofTexture _infoSlide;
 
     ImageButton _openProjectButton;
     ImageButton _newProjectButton;
