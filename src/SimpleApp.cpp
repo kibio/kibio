@@ -54,12 +54,17 @@ SimpleApp::SimpleApp():
     ofSetLogLevel("ofAVFoundationPlayer::play", OF_LOG_ERROR);
     ofSetLogLevel("ofShader", OF_LOG_ERROR);
     ofSetLogLevel("linkProgram()", OF_LOG_ERROR);
+    
+    ofAddListener(_ui.buttonSelectEvent, this, &SimpleApp::onUIButtonSelect);
+    ofAddListener(_ui.buttonDeselectEvent, this, &SimpleApp::onUIButtonDeselect);
 }
 
 
 SimpleApp::~SimpleApp()
 {
     ofRemoveListener(_logger->event, this, &SimpleApp::onLoggerEvent);
+    ofRemoveListener(_ui.buttonSelectEvent, this, &SimpleApp::onUIButtonSelect);
+    ofRemoveListener(_ui.buttonDeselectEvent, this, &SimpleApp::onUIButtonDeselect);
     ofLogToConsole();
 }
 
@@ -231,6 +236,16 @@ void SimpleApp::windowResized(ofResizeEventArgs &resize)
     _ui.placeIcons();
 }
 
+void SimpleApp::onUIButtonSelect(const UserInterfaceEvent& args)
+{
+
+}
+
+void SimpleApp::onUIButtonDeselect(const UserInterfaceEvent& args)
+{
+
+}
+    
 AbstractApp::Mode SimpleApp::getMode() const
 {
     return _mode;
@@ -317,6 +332,7 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
         }
 
         _currentProject = project;
+        _ui.setProjectName(name);
         return true;
     }
     else
@@ -333,8 +349,8 @@ bool SimpleApp::onLoggerEvent(const LoggerEventArgs& e)
 {
     return false;
 }
-
-
+    
+    
 bool SimpleApp::saveProject()
 {
     if (_currentProject)

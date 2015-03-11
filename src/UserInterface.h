@@ -57,6 +57,9 @@ class ImageButton
 public:
     ImageButton(const std::string& imagePath,
                 UIButtonType _type,
+                bool sticky,
+                ofEvent<const UserInterfaceEvent>& buttonSelectEvent,
+                ofEvent<const UserInterfaceEvent>& buttonDeselectEvent,
                 ofColor color,
                 ofColor highlightColor,
                 ofColor shadowColor);
@@ -66,13 +69,14 @@ public:
     void set(int x, int y, int width, int height);
     void update(const ofPoint& mouse);
     void draw(const ofPoint& shadowOffset=ofPoint::zero());
+    void mouseReleased(ofMouseEventArgs& args);
     
     void select();
-    void unselect();
+    void deselect();
     void setSelected(bool b);
     
-    bool isSelected();
-    bool isHovered();
+    bool isSelected() const;
+    bool isHovered() const;
     
     UIButtonType type;
     
@@ -80,12 +84,16 @@ protected:
     
     bool _bSelected;
     bool _bHovered;
+    bool _bSticky;
     
     ofColor _color;
     ofColor _highlightColor;
     ofColor _shadowColor;
     ofTexture _texture;
     ofRectangle _rect;
+    
+    ofEvent<const UserInterfaceEvent>& _buttonSelectEvent;
+    ofEvent<const UserInterfaceEvent>& _buttonDeselectEvent;
 };
 
 /// \brief A class for managing the user interface
@@ -106,11 +114,18 @@ public:
     
     void setProjectName(const std::string& name);
     void setDrawIconShadows(bool drawIconShadows);
+    void setUIButtonSelectState(const UIButtonType& type, bool state);
+    void toggleUIButtonState(const UIButtonType& type);
+
+    void onButtonSelect(const UserInterfaceEvent& args);
+    void onButtonDeselect(const UserInterfaceEvent& args);
     
     bool isVisible() const;
-    
-    ofEvent<UserInterfaceEvent> buttonEvent;
+    bool getUIButtonSelectState(const UIButtonType& type);
 
+    ofEvent<const UserInterfaceEvent> buttonSelectEvent;
+    ofEvent<const UserInterfaceEvent> buttonDeselectEvent;
+    
 protected:
 
     bool _bDrawIconShadows;
@@ -118,6 +133,7 @@ protected:
     
     int _iconPadding;
     int _iconSize;
+    int _fontSize;
     
     std::string _projectName;
     
@@ -126,6 +142,8 @@ protected:
     ofColor _color;
     ofColor _highlightColor;
     ofColor _shadowColor;
+    
+    ofTrueTypeFont _font;
 
     ImageButton _openProjectButton;
     ImageButton _newProjectButton;
@@ -136,6 +154,9 @@ protected:
     ImageButton _toolTranslateButton;
     ImageButton _toolRotateButton;
     ImageButton _toolScaleButton;
+    
+    ImageButton& _getButton(UIButtonType type);
+    std::vector<ImageButton*> _getSelectedButtons();
     
 };
     

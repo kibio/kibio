@@ -101,7 +101,10 @@ public:
     bool saveProjectAs(const std::string& name);
 
     bool onLoggerEvent(const LoggerEventArgs& e);
-
+    
+    void onUIButtonSelect(const UserInterfaceEvent& args);
+    void onUIButtonDeselect(const UserInterfaceEvent& args);
+    
     enum
     {
         /// \brief Settings version.
