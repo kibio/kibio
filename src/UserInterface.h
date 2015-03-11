@@ -70,11 +70,13 @@ public:
     void update(const ofPoint& mouse);
     void draw(const ofPoint& shadowOffset=ofPoint::zero());
     void mouseReleased(ofMouseEventArgs& args);
-    
+    void enable();
+    void disable();
     void select(bool simulated=false);
     void deselect();
     void setSelected(bool b);
     
+    bool isEnabled() const;
     bool isSelected() const;
     bool isHovered() const;
     
@@ -86,6 +88,7 @@ protected:
     bool _bHovered;
     bool _bSticky;
     bool _bClickSimulated;
+    bool _bEnabled;
     
     ofColor _color;
     ofColor _highlightColor;
@@ -112,6 +115,8 @@ public:
     void toggleVisible();
     void hide();
     void show();
+    void enable();
+    void disable();
     
     void setProjectName(const std::string& name);
     void setDrawIconShadows(bool drawIconShadows);
@@ -123,6 +128,7 @@ public:
     void onButtonDeselect(const UserInterfaceEvent& args);
     
     bool isVisible() const;
+    bool isEnabled() const;
     bool getUIButtonSelectState(const UIButtonType& type);
     
     std::vector<ImageButton*> getSelectedButtons();

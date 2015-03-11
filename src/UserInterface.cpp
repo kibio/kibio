@@ -47,7 +47,8 @@ _highlightColor(highlightColor),
 _shadowColor(shadowColor),
 _bSelected(false),
 _bHovered(false),
-_bClickSimulated(false)
+_bClickSimulated(false),
+_bEnabled(true)
 {
 
     ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
@@ -112,7 +113,7 @@ void ImageButton::draw(const ofPoint& shadowOffset)
     
 void ImageButton::mouseReleased(ofMouseEventArgs& args)
 {
-    if (_rect.inside(args.x, args.y))
+    if (isEnabled() && _rect.inside(args.x, args.y))
     {
         if (_bSticky)
         {
@@ -151,6 +152,21 @@ void ImageButton::setSelected(bool b)
     {
         deselect();
     }
+}
+
+void ImageButton::enable()
+{
+    _bEnabled = true;
+}
+    
+void ImageButton::disable()
+{
+    _bEnabled = false;
+}
+    
+bool ImageButton::isEnabled() const
+{
+    return _bEnabled;
 }
     
 bool ImageButton::isSelected() const
@@ -355,17 +371,52 @@ void UserInterface::placeIcons()
 
 void UserInterface::toggleVisible()
 {
-    _bVisible = !_bVisible;
+    if (isVisible())
+    {
+        hide();
+    }
+    else
+    {
+        show();
+    }
 }
     
 void UserInterface::hide()
 {
     _bVisible = false;
+    disable();
 }
 
 void UserInterface::show()
 {
     _bVisible = true;
+    enable();
+}
+    
+void UserInterface::enable()
+{
+    _openProjectButton.enable();
+    _newProjectButton.enable();
+    _saveProjectButton.enable();
+    _infoButton.enable();
+    _toggleModeButton.enable();
+    _toolBrushButton.enable();
+    _toolTranslateButton.enable();
+    _toolRotateButton.enable();
+    _toolScaleButton.enable();
+}
+
+void UserInterface::disable()
+{
+    _openProjectButton.disable();
+    _newProjectButton.disable();
+    _saveProjectButton.disable();
+    _infoButton.disable();
+    _toggleModeButton.disable();
+    _toolBrushButton.disable();
+    _toolTranslateButton.disable();
+    _toolRotateButton.disable();
+    _toolScaleButton.disable();
 }
 
 void UserInterface::setProjectName(const std::string& name)

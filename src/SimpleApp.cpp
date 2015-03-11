@@ -174,7 +174,9 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
                 case EDIT:
                     _mode = PRESENT;
                     _ui.hide();
+                    _ui.disable();
                     break;
+                    
                 case PRESENT:
                     _mode = EDIT;
                     _ui.show();
@@ -274,6 +276,7 @@ void SimpleApp::onUIButtonSelect(const UserInterfaceEvent& args)
         {
             _mode = PRESENT;
             _ui.hide();
+            _ui.disable();
         }
         else{
             _mode = EDIT;
@@ -622,6 +625,7 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
     {
         object._mode = PRESENT;
         object._ui.hide();
+        object._ui.disable();
     }
 
 #ifdef OF_TARGET_LINUX
