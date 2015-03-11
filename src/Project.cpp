@@ -37,7 +37,8 @@ const std::string Project::FILE_EXTENSION = ".kibio";
 Project::Project(AbstractApp& parent):
     _parent(parent),
     _isLoaded(false),
-    _transform(TRANSLATE)
+    _bMaskBrushEnabled(false),
+    _transform(NONE)
 {
     ofRegisterDragEvents(this);
     ofRegisterKeyEvents(this);
@@ -515,6 +516,23 @@ bool Project::isCornerHovered(const ofPoint& point) const
     
     return false;
 }
+    
+void Project::enableMaskBrush()
+{
+    _bMaskBrushEnabled = true;
+}
+
+
+void Project::disableMaskBrush()
+{
+    _bMaskBrushEnabled = false;
+}
+
+
+bool Project::isMaskBrushEnabled()
+{
+    return _bMaskBrushEnabled;
+}
 
 std::string Project::getName() const
 {
@@ -525,6 +543,11 @@ std::string Project::getName() const
 Poco::Path Project::getPath() const
 {
     return _path;
+}
+    
+void Project::setTransform(TransformType type)
+{
+    _transform = type;
 }
 
 
@@ -658,21 +681,6 @@ void Project::keyPressed(ofKeyEventArgs& key)
                 
                 ++iter;
             }
-        }
-        else if ('t' == key.key)
-        {
-            _transform = TRANSLATE;
-            ofLogVerbose("Project::KeyPressed") << "TransformType TRANSLATE";
-        }
-        else if ('r' == key.key)
-        {
-            _transform = ROTATE;
-            ofLogVerbose("Project::KeyPressed") << "TransformType ROTATE";
-        }
-        else if ('s' == key.key)
-        {
-            _transform = SCALE;
-            ofLogVerbose("Project::KeyPressed") << "TransformType SCALE";
         }
         else if (OF_KEY_DEL == key.key || OF_KEY_BACKSPACE == key.key)
         {

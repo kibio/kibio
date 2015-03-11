@@ -166,7 +166,7 @@ void Layer::draw()
     {
         ofPoint layerMouse = screenToLayer(mouse);
 
-        if (ofGetKeyPressed(OF_KEY_COMMAND))
+        if (_parent.isMaskBrushEnabled())
         {
             _maskPath.clear();
             _maskSurface.begin();
@@ -221,7 +221,10 @@ void Layer::draw()
         std::shared_ptr<Layer> layer = _parent.getLayerAtPoint(mouse);
         
         // TODO: Only when layer is on top
-        if (layer && !_parent._dragging && layer->getId() == getId())
+        if (layer &&
+            !_parent._dragging &&
+            _parent._transform != Project::NONE &&
+            layer->getId() == getId())
         {
             ofSetColor(_highlightColor);
         }

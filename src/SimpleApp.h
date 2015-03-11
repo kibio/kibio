@@ -93,6 +93,10 @@ public:
     /// \param name The name of the project.
     /// \param project The project to load if the pointer already exists.
     bool loadProject(const std::string& name, std::shared_ptr<Project> project);
+    
+    void promptLoadProject();
+    
+    void promptCreateProject();
 
     /// \brief Save the current project.
     bool saveProject();

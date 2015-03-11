@@ -48,7 +48,8 @@ public:
     enum TransformType {
         TRANSLATE,
         ROTATE,
-        SCALE
+        SCALE,
+        NONE
     };
     
     /// \brief Create a project.
@@ -85,6 +86,10 @@ public:
     /// \brief Delete the mask used by the layer.
     /// \param point The point used to select the mask to delete
     void clearMaskAtPoint(const ofPoint& point);
+    
+    /// \brief Set the current transform type
+    /// \param type The TransformType to set
+    void setTransform(TransformType type);
 
     /// \brief Get the layer at point.
     /// \param point The point used to get the layer by
@@ -114,6 +119,16 @@ public:
     bool isLoaded() const;
     
     bool isCornerHovered(const ofPoint& point) const;
+    
+    /// \brief Get the state of the mouse brush.
+    /// \returns True if the mask brush is enabled
+    bool isMaskBrushEnabled();
+    
+    /// \brief Enable the mask brush.
+    void enableMaskBrush();
+    
+    /// \brief Disable the mask brush.
+    void disableMaskBrush();
 
     /// \brief Get the project name.
     /// \returns the project name.
@@ -156,6 +171,7 @@ private:
 
     /// \brief true iff the project is loaded.
     bool _isLoaded;
+    bool _bMaskBrushEnabled;
 
     /// \brief The project path.
     Poco::Path _path;

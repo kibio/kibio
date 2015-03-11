@@ -46,7 +46,8 @@ _color(color),
 _highlightColor(highlightColor),
 _shadowColor(shadowColor),
 _bSelected(false),
-_bHovered(false)
+_bHovered(false),
+_bClickSimulated(false)
 {
 
     ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
@@ -89,7 +90,7 @@ void ImageButton::draw(const ofPoint& shadowOffset)
                       _rect.height);
     }
     
-    if (isHovered() || isSelected())
+    if (isHovered() || isSelected() || _bClickSimulated)
     {
         ofSetColor(_highlightColor);
     }
@@ -101,6 +102,12 @@ void ImageButton::draw(const ofPoint& shadowOffset)
     _texture.draw(_rect.x, _rect.y, _rect.width, _rect.height);
     
     ofPopStyle();
+    
+    if (_bClickSimulated)
+    {
+        if (!_bSticky) deselect();
+        _bClickSimulated = false;
+    }
 }
     
 void ImageButton::mouseReleased(ofMouseEventArgs& args)
@@ -119,9 +126,10 @@ void ImageButton::mouseReleased(ofMouseEventArgs& args)
     }
 }
     
-void ImageButton::select()
+void ImageButton::select(bool simulated)
 {
     _bSelected = true;
+    _bClickSimulated = simulated;
     const UserInterfaceEvent args(type);
     ofNotifyEvent(_buttonSelectEvent, args, this);
 }
@@ -258,17 +266,20 @@ UserInterface::~UserInterface()
     
 void UserInterface::update()
 {
-    ofPoint mouse(ofGetMouseX(), ofGetMouseY());
-    
-    _openProjectButton.update(mouse);
-    _newProjectButton.update(mouse);
-    _saveProjectButton.update(mouse);
-    _infoButton.update(mouse);
-    _toggleModeButton.update(mouse);
-    _toolBrushButton.update(mouse);
-    _toolTranslateButton.update(mouse);
-    _toolRotateButton.update(mouse);
-    _toolScaleButton.update(mouse);
+    if (isVisible())
+    {
+        ofPoint mouse(ofGetMouseX(), ofGetMouseY());
+        
+        _openProjectButton.update(mouse);
+        _newProjectButton.update(mouse);
+        _saveProjectButton.update(mouse);
+        _infoButton.update(mouse);
+        _toggleModeButton.update(mouse);
+        _toolBrushButton.update(mouse);
+        _toolTranslateButton.update(mouse);
+        _toolRotateButton.update(mouse);
+        _toolScaleButton.update(mouse);
+    }
 }
     
 void UserInterface::draw()
@@ -277,21 +288,24 @@ void UserInterface::draw()
     ofPushStyle();
     ofSetColor(_color);
     
-    if (_font.isLoaded() && !_projectName.empty())
+    if (isVisible())
     {
-        _font.drawString(_projectName, _iconPadding, _fontSize + _iconPadding);
+        if (_font.isLoaded() && !_projectName.empty())
+        {
+            _font.drawString(_projectName, _iconPadding, _fontSize + _iconPadding);
+        }
+        
+        _openProjectButton.draw(_shadowOffset);
+        _newProjectButton.draw(_shadowOffset);
+        _saveProjectButton.draw(_shadowOffset);
+        _infoButton.draw(_shadowOffset);
+        _toggleModeButton.draw(_shadowOffset);
+        _toolBrushButton.draw(_shadowOffset);
+        _toolTranslateButton.draw(_shadowOffset);
+        _toolRotateButton.draw(_shadowOffset);
+        _toolScaleButton.draw(_shadowOffset);
     }
-    
-    _openProjectButton.draw(_shadowOffset);
-    _newProjectButton.draw(_shadowOffset);
-    _saveProjectButton.draw(_shadowOffset);
-    _infoButton.draw(_shadowOffset);
-    _toggleModeButton.draw(_shadowOffset);
-    _toolBrushButton.draw(_shadowOffset);
-    _toolTranslateButton.draw(_shadowOffset);
-    _toolRotateButton.draw(_shadowOffset);
-    _toolScaleButton.draw(_shadowOffset);
-    
+
     ofPopStyle();
 }
 
@@ -343,7 +357,7 @@ void UserInterface::toggleVisible()
 {
     _bVisible = !_bVisible;
 }
-
+    
 void UserInterface::hide()
 {
     _bVisible = false;
@@ -382,6 +396,12 @@ bool UserInterface::getUIButtonSelectState(const UIButtonType& type)
     return button.isSelected();
 }
     
+void UserInterface::simulateClick(const UIButtonType& type)
+{
+    ImageButton& button = _getButton(type);
+    button.select(true);
+}
+
 void UserInterface::onButtonSelect(const UserInterfaceEvent& args)
 {
     // if button is mutually exclusive
@@ -391,7 +411,7 @@ void UserInterface::onButtonSelect(const UserInterfaceEvent& args)
         args.type == BUTTON_TOOL_ROTATE ||
         args.type == BUTTON_TOOL_SCALE) {
         
-        std::vector<ImageButton*> buttons = _getSelectedButtons();
+        std::vector<ImageButton*> buttons = getSelectedButtons();
         if (buttons.size() > 0)
         {
             for (std::size_t i = 0; i < buttons.size(); i++)
@@ -422,41 +442,41 @@ ImageButton&  UserInterface::_getButton(UIButtonType type)
     {
         return _openProjectButton;
     }
-    else if (BUTTON_NEW_PROJECT)
+    else if (type == BUTTON_NEW_PROJECT)
     {
         return _newProjectButton;
     }
-    else if (BUTTON_SAVE_PROJECT)
+    else if (type == BUTTON_SAVE_PROJECT)
     {
         return _saveProjectButton;
     }
-    else if (BUTTON_INFO)
+    else if (type == BUTTON_INFO)
     {
         return _infoButton;
     }
-    else if (BUTTON_TOGGLE_MODE)
+    else if (type == BUTTON_TOGGLE_MODE)
     {
         return _toggleModeButton;
     }
-    else if (BUTTON_TOOL_BRUSH)
+    else if (type == BUTTON_TOOL_BRUSH)
     {
         return _toolBrushButton;
     }
-    else if (BUTTON_TOOL_TRANSLATE)
+    else if (type == BUTTON_TOOL_TRANSLATE)
     {
         return _toolTranslateButton;
     }
-    else if (BUTTON_TOOL_ROTATE)
+    else if (type == BUTTON_TOOL_ROTATE)
     {
         return _toolRotateButton;
     }
-    else if (BUTTON_TOOL_SCALE)
+    else if (type == BUTTON_TOOL_SCALE)
     {
         return _toolScaleButton;
     }
 }
     
-std::vector<ImageButton*> UserInterface::_getSelectedButtons()
+std::vector<ImageButton*> UserInterface::getSelectedButtons()
 {
     std::vector<ImageButton*> buttons;
     

@@ -173,9 +173,11 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
             {
                 case EDIT:
                     _mode = PRESENT;
+                    _ui.hide();
                     break;
                 case PRESENT:
                     _mode = EDIT;
+                    _ui.show();
                     break;
             }
         }
@@ -185,48 +187,61 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         else if ('o' == key.key)
         {
-            ofFileDialogResult result = ofSystemLoadDialog("Open Project",
-                                                           false,
-                                                           getUserProjectsPath().toString());
-
-            Poco::Path relativePath(result.getPath());
-
-            if (result.bSuccess && makeRelativeToUserProjectsFolder(relativePath))
-            {
-                std::string projectName = relativePath.getBaseName();
-                loadProject(projectName);
-            }
-            else
-            {
-                ofSystemAlertDialog("Invalid project file.");
-            }
+            // pass this through the UIButtonSelectEvent
+            _ui.simulateClick(BUTTON_OPEN_PROJECT);
         }
         else if ('n' == key.key)
         {
-            
-            std::string result = ofSystemTextBoxDialog("Project Name");
-            if (!result.empty())
-            {
-                createProject(result);
-            }
+            // pass this through the UIButtonSelectEvent
+            _ui.simulateClick(BUTTON_NEW_PROJECT);
         }
         else if ('s' == key.key)
         {
             if (_currentProject)
             {
-                if (ofGetKeyPressed(OF_KEY_SHIFT))
-                {
-                    std::string result = ofSystemTextBoxDialog("Project Name");
-                    if (!result.empty())
-                    {
-                        saveProjectAs(result);
-                    }
-                }
-                else
-                {
-                    _currentProject->save();
-                }
+                // pass this through the UIButtonSelectEvent
+                _ui.simulateClick(BUTTON_SAVE_PROJECT);
             }
+        }
+        
+        // reduncency ignores order keys are pressed in
+        if (('s' == key.key && ofGetKeyPressed(OF_KEY_SHIFT)) ||
+            (key.key == OF_KEY_SHIFT && ofGetKeyPressed('s')))
+        {
+
+            std::string result = ofSystemTextBoxDialog("Project Name");
+            if (!result.empty())
+            {
+                saveProjectAs(result);
+            }
+        }
+    }
+    else{ // single keys
+        
+        if ('h' == key.key)
+        {
+            if (_mode != PRESENT)
+            {
+                _ui.toggleVisible();
+            }
+        }
+        else if ('t' == key.key)
+        {
+            // pass this through the UIButtonSelectEvent
+            _ui.simulateClick(BUTTON_TOOL_TRANSLATE);
+        }
+        else if ('r' == key.key)
+        {
+            // do the same with the rest
+            _ui.simulateClick(BUTTON_TOOL_ROTATE);
+        }
+        else if ('s' == key.key)
+        {
+            _ui.simulateClick(BUTTON_TOOL_SCALE);
+        }
+        else if ('b' == key.key)
+        {
+            _ui.simulateClick(BUTTON_TOOL_BRUSH);
         }
     }
 }
@@ -238,12 +253,99 @@ void SimpleApp::windowResized(ofResizeEventArgs &resize)
 
 void SimpleApp::onUIButtonSelect(const UserInterfaceEvent& args)
 {
-
+    if (args.type == BUTTON_NEW_PROJECT)
+    {
+        promptCreateProject();
+    }
+    else if (args.type == BUTTON_OPEN_PROJECT)
+    {
+        promptLoadProject();
+    }
+    else if (args.type == BUTTON_SAVE_PROJECT)
+    {
+        if (_currentProject)
+        {
+            if (!saveProject()) ofSystemAlertDialog("Error saving current project.");
+        }
+    }
+    else if (args.type == BUTTON_TOGGLE_MODE)
+    {
+        if (_mode == EDIT)
+        {
+            _mode = PRESENT;
+            _ui.hide();
+        }
+        else{
+            _mode = EDIT;
+            _ui.show();
+        }
+    }
+    else if (args.type == BUTTON_TOOL_BRUSH)
+    {
+        if (_currentProject)
+        {
+            _currentProject->enableMaskBrush();
+        }
+    }
+    else if (args.type == BUTTON_TOOL_ROTATE)
+    {
+        if (_currentProject)
+        {
+            _currentProject->setTransform(Project::ROTATE);
+        }
+    }
+    else if (args.type == BUTTON_TOOL_SCALE)
+    {
+        if (_currentProject)
+        {
+            _currentProject->setTransform(Project::SCALE);
+        }
+    }
+    else if (args.type == BUTTON_TOOL_TRANSLATE)
+    {
+        if (_currentProject)
+        {
+            _currentProject->setTransform(Project::TRANSLATE);
+        }
+    }
 }
 
 void SimpleApp::onUIButtonDeselect(const UserInterfaceEvent& args)
 {
+    // if a transform button was deselected
+    if (args.type == BUTTON_TOOL_TRANSLATE ||
+        args.type == BUTTON_TOOL_ROTATE ||
+        args.type == BUTTON_TOOL_SCALE)
+    {
+        std::vector<ImageButton*> buttons = _ui.getSelectedButtons();
+        
+        if (buttons.size() > 0)
+        {
+            for (std::size_t i = 0; i < buttons.size(); i++)
+            {
+                ImageButton* button = buttons[i];
+                if (button->type == BUTTON_TOOL_TRANSLATE ||
+                    button->type == BUTTON_TOOL_ROTATE ||
+                    button->type == BUTTON_TOOL_SCALE)
+                {
+                    return;
+                }
+            }
+        }
 
+        if (_currentProject)
+        {
+            _currentProject->setTransform(Project::NONE);
+        }
+    }
+    
+    if (args.type == BUTTON_TOOL_BRUSH)
+    {
+        if (_currentProject)
+        {
+            _currentProject->disableMaskBrush();
+        }
+    }
 }
     
 AbstractApp::Mode SimpleApp::getMode() const
@@ -342,6 +444,36 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
         return false;
     }
 
+}
+    
+void SimpleApp::promptLoadProject()
+{
+    ofFileDialogResult result = ofSystemLoadDialog("Open Project",
+                                                   false,
+                                                   getUserProjectsPath().toString());
+    if (!result.getName().empty())
+    {
+        Poco::Path relativePath(result.getPath());
+        
+        if (result.bSuccess && makeRelativeToUserProjectsFolder(relativePath))
+        {
+            std::string projectName = relativePath.getBaseName();
+            loadProject(projectName);
+        }
+        else
+        {
+            ofSystemAlertDialog("Invalid project file.");
+        }
+    }
+}
+
+void SimpleApp::promptCreateProject()
+{
+    std::string result = ofSystemTextBoxDialog("Project Name");
+    if (!result.empty())
+    {
+        createProject(result);
+    }
 }
 
 
@@ -484,10 +616,12 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
     if ("edit" == mode)
     {
         object._mode = EDIT;
+        object._ui.show();
     }
     else
     {
         object._mode = PRESENT;
+        object._ui.hide();
     }
 
 #ifdef OF_TARGET_LINUX
