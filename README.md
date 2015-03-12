@@ -1,4 +1,4 @@
-kibio
+Kibio
 =====
 
 ### Use
@@ -67,3 +67,10 @@ This app requires the following addons:
 Additionally, this app must be built from the openFrameworks master branch. Or, to fix a current mouse disappearing bug with the openFrameworks master GLFW library we use this [`develop-apothecary`](https://github.com/bakercp/openframeworks/tree/develop-apothecary) branch in development.
 
 - https://github.com/openframeworks/openFrameworks
+
+### License and Attribution
+
+Kibio is developed by members of the SAIC [openLab](http://olab.io) and is released under an MIT License.
+
+The glyphs used in the Kibio user interface were created by Daniel Bruce and released under a CC BY-SA 4.0 License.
+
