@@ -62,9 +62,9 @@ SimpleApp::SimpleApp():
 
 SimpleApp::~SimpleApp()
 {
-    ofRemoveListener(_logger->event, this, &SimpleApp::onLoggerEvent);
     ofRemoveListener(_ui.buttonSelectEvent, this, &SimpleApp::onUIButtonSelect);
     ofRemoveListener(_ui.buttonDeselectEvent, this, &SimpleApp::onUIButtonDeselect);
+    ofRemoveListener(_logger->event, this, &SimpleApp::onLoggerEvent);
     ofLogToConsole();
 }
 
@@ -87,6 +87,7 @@ void SimpleApp::setup()
 
     loadSettings();
     _ui.placeIcons();
+    
 }
 
 void SimpleApp::exit()
@@ -517,9 +518,12 @@ bool SimpleApp::saveProjectAs(const std::string& name)
     }
 }
 
+
 void SimpleApp::loadSettings()
 {
-    Poco::Path settingsDirectoryPath(Poco::Path::home(), Poco::Path(USER_SETTINGS_PATH));
+    Poco::Path settingsDirectoryPath(Poco::Path::home(),
+                                     Poco::Path(USER_SETTINGS_PATH));
+
     Poco::File settingsDirectory(settingsDirectoryPath);
 
     try

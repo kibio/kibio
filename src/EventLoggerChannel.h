@@ -49,7 +49,7 @@ public:
 
     virtual ~EventLoggerChannel();
 
-	void log(ofLogLevel level,
+    void log(ofLogLevel level,
              const std::string& module,
              const std::string& message);
 

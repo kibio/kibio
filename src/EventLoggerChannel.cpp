@@ -50,14 +50,15 @@ void EventLoggerChannel::log(ofLogLevel level,
     event.notify(this, args);
 }
 
+
 void EventLoggerChannel::log(ofLogLevel level,
                              const std::string& module,
                              const char* format, ...)
 {
-	va_list args;
-	va_start(args, format);
-	log(level, module, format, args);
-	va_end(args);
+    va_list args;
+    va_start(args, format);
+    log(level, module, format, args);
+    va_end(args);
 }
 
 void EventLoggerChannel::log(ofLogLevel level,
@@ -67,4 +68,3 @@ void EventLoggerChannel::log(ofLogLevel level,
 {
     ofConsoleLoggerChannel::log(level, module, format, args);
 }
-

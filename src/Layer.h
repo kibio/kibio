@@ -58,41 +58,41 @@ public:
 
     void update();
     void draw();
-    
-    /// \brief Draw the translation preview
-    /// \param mouse The mouse position
-    /// \param dragStart The position where the drag began
+
+    /// \brief Draw the translation preview.
+    /// \param mouse The mouse position.
+    /// \param dragStart The position where the drag began.
     void drawTranslatePreview(const ofPoint& mouse, const ofPoint& dragStart);
-    
-    /// \brief Draw the scale preview
-    /// \param mouse The mouse position
-    /// \param dragStart The position where the drag began
+
+    /// \brief Draw the scale preview.
+    /// \param mouse The mouse position.
+    /// \param dragStart The position where the drag began.
     void drawScalePreview(const ofPoint& mouse, const ofPoint& dragStart);
-    
-    /// \brief Draw the rotation preview
-    /// \param mouse The mouse position
-    /// \param dragStart The position where the drag began
+
+    /// \brief Draw the rotation preview.
+    /// \param mouse The mouse position.
+    /// \param dragStart The position where the drag began.
     void drawRotatePreview(const ofPoint& mouse, const ofPoint& dragStart);
 
     /// \brief Check if the point is inside the layer.
     /// \param point The point to test.
     /// \returns true if point is inside the layer.
     bool hitTest(const ofPoint& point) const;
-    
-    /// \brief Get the corner at mouse position
-    /// \param mouse The point to test the hit with
-    /// \returns pointer to corner if mouse is inside, nullptr if not
+
+    /// \brief Get the corner at mouse position.
+    /// \param mouse The point to test the hit with.
+    /// \returns pointer to corner if mouse is inside, nullptr if not.
     const ofPoint* getHoveredCorner(const ofPoint& mouse) const;
-    
-    /// \brief Get the centroid of the layer
-    /// \returns ofPoint shared pointer representing the centroid of the layer
-    const ofPoint getCentroid() const;
+
+    /// \brief Get the centroid of the layer.
+    /// \returns ofPoint shared pointer representing the centroid of the layer.
+    ofPoint getCentroid() const;
 
     /// \brief Get the screen point in layer space coordinates.
     /// \param point The point in screen space.
     /// \returns point The point in layer space.
     ofPoint screenToLayer(const ofPoint& point); // const;
-    
+
     /// \brief Get the layer point in screen space coordinates
     /// \param point point in layer space
     /// \returns point in screen space
@@ -102,31 +102,31 @@ public:
     /// \param path The path to video file.
     /// \returns true if loaded successfully.
     bool loadVideo(const std::string& path);
-    
+
     /// \brief Load a mask for the layer.
     /// \param path The path to mask file.
     /// \returns true if loaded successfully.
     bool loadMask(const std::string& path);
-    
+
     /// \brief Save the mask for the layer.
     /// \returns true if saved successfully.
     bool saveMask();
 
     /// \brief Clear the layer mask.
     void clearMask();
-    
+
     /// \brief Translate the layer.
     /// \param delta The change by which to translate by expressed as a vector
     void translate(const ofPoint& delta);
-    
+
     /// \brief Rotate the layer.
     /// \param degrees The rotation in degrees
     void rotate(int degrees);
-    
+
     /// \brief Scale the layer.
     /// \param mult The multiplier by which to scale by
     void scale(float mult);
-    
+
     const Poco::UUID getId() const;
 
     /// \brief Save the object to JSON.
@@ -157,7 +157,7 @@ private:
 
     ofFbo _surface;
     ofFbo _maskSurface;
-    
+
     ofColor _color;
     ofColor _highlightColor;
 
@@ -180,5 +180,5 @@ private:
     friend class Project;
 };
 
-    
+
 } // namespace Kibio

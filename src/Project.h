@@ -44,14 +44,13 @@ namespace Kibio {
 class Project
 {
 public:
-    
     enum TransformType {
         TRANSLATE,
         ROTATE,
         SCALE,
         NONE
     };
-    
+
     /// \brief Create a project.
     /// \param parent A reference to the Project's parent.
     Project(AbstractApp& parent);
@@ -63,70 +62,70 @@ public:
     void draw();
 
     /// \brief Drag event callback.
-    /// \param dragInfo The drag event info object
+    /// \param dragInfo The drag event info object.
     void dragEvent(ofDragInfo& dragInfo);
 
     bool makeRelativeToProjectFolder(Poco::Path& path) const;
     bool isFileInProjectFolder(const Poco::Path& path) const;
-    
+
     /// \brief Create a new layer.
-    /// \param videoPath The path to the video to use for the layer
-    /// \param point The point at which to place the video layer
+    /// \param videoPath The path to the video to use for the layer.
+    /// \param point The point at which to place the video layer.
     void newLayerWithVideoAtPoint(const Poco::Path& videoPath, const ofPoint& point);
-    
+
     /// \brief Set a mask for the layer.
-    /// \param maskPath The path to the mask to use for the layer
-    /// \param point The point at which to place the mask on the layer
+    /// \param maskPath The path to the mask to use for the layer.
+    /// \param point The point at which to place the mask on the layer.
     void setMaskForLayerAtPoint(const Poco::Path& maskPath, const ofPoint& point);
 
     /// \brief Delete a layer.
-    /// \param point The point used to select the layer to delete
+    /// \param point The point used to select the layer to delete.
     void deleteLayerAtPoint(const ofPoint& point);
-    
+
     /// \brief Delete the mask used by the layer.
-    /// \param point The point used to select the mask to delete
+    /// \param point The point used to select the mask to delete.
     void clearMaskAtPoint(const ofPoint& point);
-    
-    /// \brief Set the current transform type
-    /// \param type The TransformType to set
+
+    /// \brief Set the current transform type.
+    /// \param type The TransformType to set.
     void setTransform(TransformType type);
 
     /// \brief Get the layer at point.
-    /// \param point The point used to get the layer by
-    /// \returns The layer at point
+    /// \param point The point used to get the layer by.
+    /// \returns The layer at point.
     Layer::SharedPtr getLayerAtPoint(const ofPoint& point) const;
 
     /// \brief Load a project by name.
     /// \param name The name of the project in the user's project folder.
     /// \returns true if project is loaded.
     bool load(const std::string& name);
-    
-    /// \brief Create a new project
-    /// \param name The name of the new project
-    /// \param templateDir The name of the template project directory
-    /// \returns true if project was successfully created
+
+    /// \brief Create a new project.
+    /// \param name The name of the new project.
+    /// \param templateDir The name of the template project directory.
+    /// \returns true if project was successfully created.
     bool create(const std::string& name, const std::string& templateDir);
 
     /// \brief Save a project.
-    /// \returns true if project was saved successfully
+    /// \returns true if project was saved successfully.
     bool save();
-    
+
     /// \brief Save As a project.
-    /// \returns true if project was saved successfully
+    /// \returns true if project was saved successfully.
     bool saveAs(const std::string& name);
 
     /// \returns true if project is loaded.
     bool isLoaded() const;
-    
+
     bool isCornerHovered(const ofPoint& point) const;
-    
+
     /// \brief Get the state of the mouse brush.
-    /// \returns True if the mask brush is enabled
+    /// \returns True if the mask brush is enabled.
     bool isMaskBrushEnabled();
-    
+
     /// \brief Enable the mask brush.
     void enableMaskBrush();
-    
+
     /// \brief Disable the mask brush.
     void disableMaskBrush();
 
@@ -166,12 +165,12 @@ public:
 private:
     /// \brief A reference to the project's parent.
     AbstractApp& _parent;
-    
+
     TransformType _transform;
 
     /// \brief true iff the project is loaded.
     bool _isLoaded;
-    bool _bMaskBrushEnabled;
+    bool _maskBrushEnabled;
 
     /// \brief The project path.
     Poco::Path _path;
@@ -185,5 +184,5 @@ private:
     friend class Layer;
 };
 
-    
+
 } // namespace Kibio

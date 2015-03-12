@@ -47,7 +47,7 @@ public:
 
     /// \brief Destroy the SimpleApp.
     ~SimpleApp();
-    
+
     void setup();
     void update();
     void draw();
@@ -57,7 +57,7 @@ public:
 
     void keyPressed(ofKeyEventArgs& key);
     void windowResized(ofResizeEventArgs &resize);
-    
+
     /// \brief Get the current mode.
     Mode getMode() const;
 
@@ -84,18 +84,18 @@ public:
     /// \brief Create a new project.
     /// \param name The name of the new project.
     bool createProject(const std::string& name);
-    
+
     /// \brief Load a project by name.
     /// \param name The name of the project.
     bool loadProject(const std::string& name);
-    
+
     /// \brief Load a project by name.
     /// \param name The name of the project.
     /// \param project The project to load if the pointer already exists.
     bool loadProject(const std::string& name, std::shared_ptr<Project> project);
-    
+
     void promptLoadProject();
-    
+
     void promptCreateProject();
 
     /// \brief Save the current project.
@@ -105,10 +105,10 @@ public:
     bool saveProjectAs(const std::string& name);
 
     bool onLoggerEvent(const LoggerEventArgs& e);
-    
+
     void onUIButtonSelect(const UserInterfaceEvent& args);
     void onUIButtonDeselect(const UserInterfaceEvent& args);
-    
+
     enum
     {
         /// \brief Settings version.
@@ -143,7 +143,7 @@ public:
 
     /// \brief The default name for the default project.
     static const std::string DEFAULT_PROJECT;
-    
+
     /// \brief The default name for the template project directory.
     static const std::string DEFAULT_TEMPLATE_PROJECT_PATH;
 
@@ -199,17 +199,17 @@ public:
             {
                 std::string parent = projectPath.directory(i);
                 std::string other = otherPath.directory(i);
-                
+
                 if (parent != other)
                 {
                     return false;
                 }
             }
         }
-        
+
         return true;
     }
-    
+
 
 protected:
     /// \brief The current app mode.
@@ -223,7 +223,7 @@ protected:
 
     /// \brief The settings version.
     int _version;
-    
+
     UserInterface _ui;
 
     /// \brief The current project.
@@ -237,5 +237,5 @@ protected:
 
 };
 
-    
+
 } // namespace Kibio

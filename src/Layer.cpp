@@ -133,6 +133,7 @@ void Layer::update()
         ofClear(0, 0, 0, 0);
         ofPushStyle();
         ofSetColor(255);
+
         if (_mask && _mask->isAllocated())
         {
             _mask->draw(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
@@ -141,6 +142,7 @@ void Layer::update()
         {
             ofDrawRectangle(0, 0, _maskSurface.getWidth(), _maskSurface.getHeight());
         }
+
         ofPopStyle();
         _maskSurface.end();
 
@@ -181,8 +183,10 @@ void Layer::draw()
                 ofSetColor(0);
             }
 
-            _brushTex.draw(layerMouse.x-25,layerMouse.y-25,50,50);
+            _brushTex.draw(layerMouse.x-25, layerMouse.y-25, 50, 50);
+
             ofPopStyle();
+
             _maskSurface.end();
         }
     }
@@ -236,12 +240,16 @@ void Layer::draw()
         _warper.drawQuadOutline();
         
         const ofPoint* corners = _warper.getTargetPoints();
-        for (std::size_t i = 0; i < 4; ++i) {
+
+        for (std::size_t i = 0; i < 4; ++i)
+        {
             ofDrawCircle(corners[i], 6);
         }
         
         const ofPoint* hoveredCorner = getHoveredCorner(mouse);
-        if (hoveredCorner) {
+
+        if (hoveredCorner)
+        {
             ofSetColor(_highlightColor);
             ofDrawCircle(*hoveredCorner, 6);
         }
@@ -273,19 +281,19 @@ void Layer::drawTranslatePreview(const ofPoint& mouse, const ofPoint& dragStart)
 }
     
     
-void Layer::drawRotatePreview(const ofPoint &mouse, const ofPoint &dragStart)
+void Layer::drawRotatePreview(const ofPoint& mouse, const ofPoint& dragStart)
 {
     ofPoint centroid = getCentroid();
     const ofPoint* corners = _warper.getTargetPoints();
     
     float radius = 30;
-    ofVec2f deltaVec = (mouse - centroid).normalize();
+    ofPoint deltaVec = (mouse - centroid).normalize();
     deltaVec *= radius;
-    ofVec2f newPoint = deltaVec + centroid;
+    ofPoint newPoint = deltaVec + centroid;
     
-    ofVec2f startDeltaVec = (dragStart - centroid).normalize();
+    ofPoint startDeltaVec = (dragStart - centroid).normalize();
     startDeltaVec *= radius;
-    ofVec2f startPoint = startDeltaVec + centroid;
+    ofPoint startPoint = startDeltaVec + centroid;
     
     int angle = - (deltaVec.angle(dragStart - centroid));
     
@@ -300,9 +308,9 @@ void Layer::drawRotatePreview(const ofPoint &mouse, const ofPoint &dragStart)
     ofNoFill();
     ofDrawCircle(centroid, radius);
     
-    for (size_t i = 0; i < 4; ++i)
+    for (std::size_t i = 0; i < 4; ++i)
     {
-        ofVec2f point = corners[i];
+        ofPoint point = corners[i];
         point.rotate(angle, centroid);
         polyline.addVertex(point);
     }
@@ -315,14 +323,14 @@ void Layer::drawRotatePreview(const ofPoint &mouse, const ofPoint &dragStart)
 
 void Layer::drawScalePreview(const ofPoint& mouse, const ofPoint& dragStart)
 {
-    ofVec2f centroid = getCentroid();
+    ofPoint centroid = getCentroid();
     const ofPoint* corners = _warper.getTargetPoints();
     float mult = centroid.distance(mouse) / centroid.distance(dragStart);
     ofPolyline polyline;
 
     for (std::size_t i = 0; i < 4; ++i)
     {
-        ofVec2f diff = centroid - corners[i];
+        ofPoint diff = centroid - corners[i];
         float length = diff.length();
         diff.normalize();
         diff *= length * mult;
@@ -341,14 +349,14 @@ void Layer::drawScalePreview(const ofPoint& mouse, const ofPoint& dragStart)
 bool Layer::hitTest(const ofPoint& point) const
 {
     const ofPoint* p = getHoveredCorner(point);
+
     return (!p && ofPolyline(std::vector<ofPoint>(_warper.dstPoints,
-                                           _warper.dstPoints + 4)).inside(point));
+                                                  _warper.dstPoints + 4)).inside(point));
 }
 
     
 const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
 {
-    
     const ofPoint* p = 0;
     
     const ofPoint* points = _warper.dstPoints;
@@ -368,14 +376,21 @@ const ofPoint* Layer::getHoveredCorner(const ofPoint& mouse) const
     return p;
 }
     
-const ofPoint Layer::getCentroid() const
+ofPoint Layer::getCentroid() const
 {
-    
     const ofPoint* dstPoints = _warper.dstPoints;
-    float maxX = max(max(dstPoints[0].x, dstPoints[1].x), max(dstPoints[2].x, dstPoints[3].x));
-    float minX = min(min(dstPoints[0].x, dstPoints[1].x), min(dstPoints[2].x, dstPoints[3].x));
-    float maxY = max(max(dstPoints[0].y, dstPoints[1].y), max(dstPoints[2].y, dstPoints[3].y));
-    float minY = min(min(dstPoints[0].y, dstPoints[1].y), min(dstPoints[2].y, dstPoints[3].y));
+
+    float maxX = max(max(dstPoints[0].x, dstPoints[1].x),
+                     max(dstPoints[2].x, dstPoints[3].x));
+
+    float minX = min(min(dstPoints[0].x, dstPoints[1].x),
+                     min(dstPoints[2].x, dstPoints[3].x));
+
+    float maxY = max(max(dstPoints[0].y, dstPoints[1].y),
+                     max(dstPoints[2].y, dstPoints[3].y));
+
+    float minY = min(min(dstPoints[0].y, dstPoints[1].y),
+                     min(dstPoints[2].y, dstPoints[3].y));
     
     return ofPoint(minX + ((maxX - minX) * 0.5), minY + ((maxY - minY) * 0.5));
 }
@@ -384,7 +399,6 @@ const ofPoint Layer::getCentroid() const
 ofPoint Layer::screenToLayer(const ofPoint& point)
 {
     return _warper.getMatrixInverse().preMult(point);
-//
 //    return _warper.getMatrix().postMult(point);
 }
 
@@ -470,21 +484,23 @@ void Layer::clearMask()
     _maskDirty = true;
 }
 
+
 void Layer::translate(const ofPoint& delta)
 {
-    for (size_t i = 0; i < 4; ++i)
+    for (std::size_t i = 0; i < 4; ++i)
     {
         _warper.getTargetPoints()[i] += delta;
     }
 }
 
+
 void Layer::rotate(int degrees)
 {
-    ofVec2f centroid = getCentroid();
+    ofPoint centroid = getCentroid();
     
-    for (size_t i = 0; i < 4; ++i)
+    for (std::size_t i = 0; i < 4; ++i)
     {
-        ofVec2f point = _warper.getTargetPoints()[i];
+        ofPoint point = _warper.getTargetPoints()[i];
         point.rotate(degrees, centroid);
         _warper.getTargetPoints()[i] = point;
     }
@@ -493,12 +509,12 @@ void Layer::rotate(int degrees)
 
 void Layer::scale(float mult)
 {
-    ofVec2f centroid = getCentroid();
+    ofPoint centroid = getCentroid();
     ofPoint* corners = _warper.getTargetPoints();
     
     for (std::size_t i = 0; i < 4; ++i)
     {
-        ofVec2f diff = centroid - corners[i];
+        ofPoint diff = centroid - corners[i];
         float length = diff.length();
         diff.normalize();
         diff *= length * mult;

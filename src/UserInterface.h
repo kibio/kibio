@@ -24,12 +24,17 @@
 
 
 #pragma once
+
+
 #include "ofMain.h"
 
+
 namespace Kibio {
-    
+
+
 /// \brief Enum for all UserInterface button types
-enum UIButtonType {
+enum UIButtonType
+{
     BUTTON_OPEN_PROJECT,
     BUTTON_NEW_PROJECT,
     BUTTON_SAVE_PROJECT,
@@ -40,17 +45,19 @@ enum UIButtonType {
     BUTTON_TOOL_ROTATE,
     BUTTON_TOOL_SCALE
 };
-    
+
+
 /// \brief A user interface event class
 class UserInterfaceEvent : public ofEventArgs
 {
 public:
-    UserInterfaceEvent(UIButtonType _type):
-    type(_type){};
-    
+    UserInterfaceEvent(UIButtonType _type): type(_type)
+    {
+    }
+
     UIButtonType type;
 };
-    
+
 /// \brief A an image button
 class ImageButton
 {
@@ -63,9 +70,9 @@ public:
                 ofColor color,
                 ofColor highlightColor,
                 ofColor shadowColor);
-    
+
     ~ImageButton();
-    
+
     void set(int x, int y, int width, int height);
     void update(const ofPoint& mouse);
     void draw(const ofPoint& shadowOffset=ofPoint::zero());
@@ -75,27 +82,26 @@ public:
     void select(bool simulated=false);
     void deselect();
     void setSelected(bool b);
-    
+
     bool isEnabled() const;
     bool isSelected() const;
     bool isHovered() const;
-    
+
     UIButtonType type;
-    
+
 protected:
-    
-    bool _bSelected;
-    bool _bHovered;
-    bool _bSticky;
-    bool _bClickSimulated;
-    bool _bEnabled;
-    
+    bool _selected;
+    bool _hovered;
+    bool _sticky;
+    bool _clickSimulated;
+    bool _enabled;
+
     ofColor _color;
     ofColor _highlightColor;
     ofColor _shadowColor;
     ofImage _image;
     ofRectangle _rect;
-    
+
     ofEvent<const UserInterfaceEvent>& _buttonSelectEvent;
     ofEvent<const UserInterfaceEvent>& _buttonDeselectEvent;
 };
@@ -104,21 +110,20 @@ protected:
 class UserInterface
 {
 public:
-    
     UserInterface();
     ~UserInterface();
-    
+
     void update();
     void draw();
     void drawInfoSlide();
-    
+
     void placeIcons();
     void toggleVisible();
     void hide();
     void show();
     void enable();
     void disable();
-    
+
     void setProjectName(const std::string& name);
     void setDrawIconShadows(bool drawIconShadows);
     void setUIButtonSelectState(const UIButtonType& type, bool state);
@@ -127,35 +132,34 @@ public:
 
     void onButtonSelect(const UserInterfaceEvent& args);
     void onButtonDeselect(const UserInterfaceEvent& args);
-    
+
     bool isVisible() const;
     bool isEnabled() const;
     bool getUIButtonSelectState(const UIButtonType& type);
-    
+
     std::vector<ImageButton*> getSelectedButtons();
-    
+
     ofEvent<const UserInterfaceEvent> buttonSelectEvent;
     ofEvent<const UserInterfaceEvent> buttonDeselectEvent;
-    
-protected:
 
-    bool _bVisible;
-    
+protected:
+    bool _visible;
+
     int _iconPadding;
     int _iconSize;
     int _fontSize;
-    
+
     std::string _projectName;
-    
+
     ofVec2f _shadowOffset;
-    
+
     ofColor _color;
     ofColor _backgroundColor;
     ofColor _highlightColor;
     ofColor _shadowColor;
-    
+
     ofTrueTypeFont _font;
-    
+
     ofTexture _infoSlide;
 
     ImageButton _openProjectButton;
@@ -167,9 +171,10 @@ protected:
     ImageButton _toolTranslateButton;
     ImageButton _toolRotateButton;
     ImageButton _toolScaleButton;
-    
+
     ImageButton& _getButton(UIButtonType type);
-    
+
 };
-    
+
+
 } // namespace Kibio

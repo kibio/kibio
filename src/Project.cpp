@@ -28,6 +28,7 @@
 #include "Poco/FileStream.h"
 #include "Poco/UTF8String.h"
 
+
 namespace Kibio {
 
 
@@ -37,7 +38,7 @@ const std::string Project::FILE_EXTENSION = ".kibio";
 Project::Project(AbstractApp& parent):
     _parent(parent),
     _isLoaded(false),
-    _bMaskBrushEnabled(false),
+    _maskBrushEnabled(false),
     _transform(NONE)
 {
     ofRegisterDragEvents(this);
@@ -90,7 +91,7 @@ void Project::draw()
         ofPushStyle();
 
         ofSetColor(255, 255, 0);
-        
+
         if (_transform == TRANSLATE)
         {
             _dragging->drawTranslatePreview(mouse, _dragStart);
@@ -103,7 +104,7 @@ void Project::draw()
         {
             _dragging->drawScalePreview(mouse, _dragStart);
         }
-        
+
         ofPopStyle();
     }
 }
@@ -111,7 +112,10 @@ void Project::draw()
 
 void Project::dragEvent(ofDragInfo& dragInfo)
 {
-    if (_parent.getMode() != AbstractApp::EDIT) return;
+    if (_parent.getMode() != AbstractApp::EDIT)
+    {
+        return;
+    }
 
     std::vector<std::string>::const_iterator fileIter = dragInfo.files.begin();
 
@@ -158,6 +162,7 @@ void Project::dragEvent(ofDragInfo& dragInfo)
         }
     }
 }
+
 
 bool Project::makeRelativeToProjectFolder(Poco::Path& path) const
 {
@@ -225,7 +230,10 @@ bool Project::isFileInProjectFolder(const Poco::Path& path) const
 
 void Project::newLayerWithVideoAtPoint(const Poco::Path& videoPath, const ofPoint& point)
 {
-    if (_parent.getMode() != AbstractApp::EDIT) return;
+    if (_parent.getMode() != AbstractApp::EDIT)
+    {
+        return;
+    }
 
     std::shared_ptr<Layer> layer(new Layer(*this));
 
@@ -262,7 +270,10 @@ void Project::setMaskForLayerAtPoint(const Poco::Path& maskPath, const ofPoint& 
 
 void Project::deleteLayerAtPoint(const ofPoint& point)
 {
-    if (_parent.getMode() != AbstractApp::EDIT) return;
+    if (_parent.getMode() != AbstractApp::EDIT)
+    {
+        return;
+    }
 
     std::shared_ptr<Layer> layer = getLayerAtPoint(point);
 
@@ -281,7 +292,10 @@ void Project::deleteLayerAtPoint(const ofPoint& point)
 
 void Project::clearMaskAtPoint(const ofPoint& point)
 {
-    if (_parent.getMode() != AbstractApp::EDIT) return;
+    if (_parent.getMode() != AbstractApp::EDIT)
+    {
+        return;
+    }
 
     std::shared_ptr<Layer> layer = getLayerAtPoint(point);
 
@@ -354,47 +368,47 @@ bool Project::load(const std::string& name)
     return _isLoaded;
 }
 
-bool Project::create(const std::string& name, const std::string& templateDir) {
-    
+
+bool Project::create(const std::string& name, const std::string& templateDir)
+{
     // template directory folder
     Poco::File tempDir(ofToDataPath(templateDir));
-    
+
     ofLogVerbose("Project::create") << "Copying template directory from \"" << tempDir.path() << "\"";
-    
+
     if (tempDir.exists() && tempDir.isDirectory())
     {
         Poco::Path newProjectPath(_parent.getUserProjectsPath(), name);
         Poco::File newProjectFolder(newProjectPath);
-        
+
         if (newProjectFolder.exists())
         {
             ofLogError("Project::create") << "\"" << newProjectPath.toString() << "\" already exists";
             return false;
         }
-        
+
         try
         {
-            
             tempDir.copyTo(newProjectPath.toString());
-            
+
             // rename the project file
             Poco::Path projectFilePath(newProjectPath, "TemplateProject" + Project::FILE_EXTENSION);
             Poco::File projectFile(projectFilePath);
-            
+
             if (!projectFile.exists()) {
                 ofLogError("Project::create") << "Project file \"" << projectFile.path() << "\" does not exist";
                 return false;
             }
-            
+
             Poco::Path newProjectFilePath(projectFilePath.parent(), name + Project::FILE_EXTENSION);
-            
+
             try
             {
-                
+
                 projectFile.renameTo(newProjectFilePath.toString());
-                
+
                 ofLogNotice("Project::create") << "Project \"" << name << "\" created" ;
-                
+
                 return true;
             }
             catch (const Poco::Exception& exc)
@@ -408,17 +422,16 @@ bool Project::create(const std::string& name, const std::string& templateDir) {
             ofLogError("Project::create") << exc.displayText();
             return false;
         }
-        
+
     }
     else
     {
-        
         ofLogError("Project::create")
             << "Template Directory \"" << templateDir << "\" does not exist or is not a directory" ;
-        
+
         return false;
     }
-    
+
 }
 
 bool Project::save()
@@ -452,29 +465,28 @@ bool Project::save()
         return false;
     }
 }
-    
+
 bool Project::saveAs(const std::string& name)
 {
-    
     Poco::Path newProjectFolderPath(_path.parent(), name);
     Poco::File newProjectFolderFile(newProjectFolderPath);
-    
+
     if (newProjectFolderFile.exists())
     {
         ofLogError("Project::saveAs") << newProjectFolderPath.toString() << " already exists";
         return false;
     }
-    
+
     Poco::File oldProjectFolderFile(_path);
-    
+
     try
     {
         oldProjectFolderFile.copyTo(newProjectFolderPath.toString());
-        
+
         Poco::Path settingsFilePath(newProjectFolderPath, getName() + FILE_EXTENSION);
         Poco::Path newSettingsFilePath(newProjectFolderPath, name + FILE_EXTENSION);
         Poco::File settingsFile(settingsFilePath);
-        
+
         try
         {
             settingsFile.renameTo(newSettingsFilePath.toString());
@@ -495,44 +507,48 @@ bool Project::saveAs(const std::string& name)
     }
 }
 
+
 bool Project::isLoaded() const
 {
     return _isLoaded;
 }
-    
+
+
 bool Project::isCornerHovered(const ofPoint& point) const
 {
     std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
-    
+
     while (iter != _layers.end())
     {
         if ((*iter))
         {
             if ((*iter)->getHoveredCorner(point)) return true;
         }
-        
+
         ++iter;
     }
-    
+
     return false;
 }
-    
+
+
 void Project::enableMaskBrush()
 {
-    _bMaskBrushEnabled = true;
+    _maskBrushEnabled = true;
 }
 
 
 void Project::disableMaskBrush()
 {
-    _bMaskBrushEnabled = false;
+    _maskBrushEnabled = false;
 }
 
 
 bool Project::isMaskBrushEnabled()
 {
-    return _bMaskBrushEnabled;
+    return _maskBrushEnabled;
 }
+
 
 std::string Project::getName() const
 {
@@ -544,7 +560,7 @@ Poco::Path Project::getPath() const
 {
     return _path;
 }
-    
+
 void Project::setTransform(TransformType type)
 {
     _transform = type;
@@ -678,7 +694,7 @@ void Project::keyPressed(ofKeyEventArgs& key)
                         (*iter)->_video->setPosition(0);
                     }
                 }
-                
+
                 ++iter;
             }
         }
@@ -715,18 +731,21 @@ void Project::mouseDragged(ofMouseEventArgs& mouse)
 
 void Project::mousePressed(ofMouseEventArgs& mouse)
 {
-    if (_parent.getMode() != AbstractApp::EDIT) return;
+    if (_parent.getMode() != AbstractApp::EDIT)
+    {
+        return;
+    }
 
     std::shared_ptr<Layer> layer = getLayerAtPoint(mouse);
 
     if (layer)
     {
-        
+
         // check if this is already the top layer, if so ignore
         if (layer->getId() != _layers[_layers.size() - 1]->getId())
         {
             std::vector<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
-            
+
             while (iter != _layers.end())
             {
                 if ((*iter) && (*iter)->getId() == layer->getId())
@@ -735,12 +754,12 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
                     _layers.push_back(layer);
                     break;
                 }
-                
+
                 ++iter;
             }
-            
+
         }
-        
+
         if (!isCornerHovered(mouse))
         {
             _dragging = layer;
@@ -755,7 +774,7 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
     {
         ofPoint dragEnd = mouse;
         ofPoint delta = dragEnd - _dragStart;
-        
+
         if (_transform == TRANSLATE)
         {
             _dragging->translate(delta);
@@ -766,10 +785,10 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
             // negative values. This may be a bug in ofPoint.
             ofVec2f centroid = _dragging->getCentroid();
             ofVec2f deltaVec = mouse - centroid;
-            
+
             int angle = -(deltaVec.angle(_dragStart - centroid));
             _dragging->rotate(angle);
-            
+
         }
         else if (_transform == SCALE)
         {
@@ -785,9 +804,7 @@ void Project::mouseReleased(ofMouseEventArgs& mouse)
 
 void Project::mouseScrolled(ofMouseEventArgs& mouse)
 {
-
 }
-
 
 
 } // namespace Kibio
