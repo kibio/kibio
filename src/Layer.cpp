@@ -194,7 +194,7 @@ void Layer::draw()
     ofPushStyle();
 
     _maskShader.begin();
-    _maskShader.setUniformTexture("maskTex", _maskSurface.getTextureReference(), 1);
+    _maskShader.setUniformTexture("maskTex", _maskSurface.getTexture(), 1);
 
 
     if (_video && _video->isLoaded())
@@ -401,7 +401,7 @@ bool Layer::loadVideo(const std::string& path)
 
     _video = std::shared_ptr<ofVideoPlayer>(new ofVideoPlayer());
 
-    if (_video->loadMovie(fullyQualifiedPath.toString()))
+    if (_video->load(fullyQualifiedPath.toString()))
     {
         _videoPath = path;
         _maskDirty = true;
@@ -455,7 +455,7 @@ bool Layer::saveMask()
     {
         _maskPath = "assets/masks/" + ofGetTimestampString() + "-lastmask.png";
         ofPixels pixels;
-        _maskSurface.getTextureReference().readToPixels(pixels);
+        _maskSurface.getTexture().readToPixels(pixels);
         Poco::Path fullyQualifiedPath(_parent.getPath(), _maskPath);
         ofSaveImage(pixels, fullyQualifiedPath.toString());
         return true;
