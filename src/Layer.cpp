@@ -308,7 +308,9 @@ void Layer::drawRotatePreview(const ofPoint& mouse, const ofPoint& dragStart)
     
     for (std::size_t i = 0; i < 4; ++i)
     {
-        ofPoint point = corners[i];
+        // because of a current bug in OF Master (pre v0.9.0)
+        // point here must be an ofVec2f not ofPoint
+        ofVec2f point = corners[i];
         point.rotate(angle, centroid);
         polyline.addVertex(point);
     }
@@ -498,7 +500,9 @@ void Layer::rotate(int degrees)
     
     for (std::size_t i = 0; i < 4; ++i)
     {
-        ofPoint point = _warper.getTargetPoints()[i];
+        // because of a current bug in OF Master (pre v0.9.0)
+        // point here must be an ofVec2f not ofPoint
+        ofVec2f point = _warper.getTargetPoints()[i];
         point.rotate(degrees, centroid);
         _warper.getTargetPoints()[i] = point;
     }
