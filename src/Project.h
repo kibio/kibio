@@ -44,7 +44,8 @@ namespace Kibio {
 class Project
 {
 public:
-    enum TransformType {
+    enum TransformType
+    {
         TRANSLATE,
         ROTATE,
         SCALE,

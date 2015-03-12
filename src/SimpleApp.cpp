@@ -248,11 +248,13 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
     }
 }
-    
+
+
 void SimpleApp::windowResized(ofResizeEventArgs &resize)
 {
     _ui.placeIcons();
 }
+
 
 void SimpleApp::onUIButtonSelect(const UserInterfaceEvent& args)
 {
@@ -411,7 +413,9 @@ std::shared_ptr<Project> SimpleApp::getCurrentProject()
 bool SimpleApp::createProject(const std::string& name)
 {
     std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
-    if (!project->create(name, SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH)) {
+
+    if (!project->create(name, SimpleApp::DEFAULT_TEMPLATE_PROJECT_PATH))
+    {
         ofSystemAlertDialog("Could not create project.\nMake sure that you do not already have a project by that name.");
         return false;
     } else {
@@ -434,7 +438,10 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
         // if there is an existing project
         if (_currentProject)
         {
-            if (!saveProject()) ofSystemAlertDialog("Error saving current project.");
+            if (!saveProject())
+            {
+                ofSystemAlertDialog("Error saving current project.");
+            }
         }
 
         _currentProject = project;
@@ -474,6 +481,7 @@ void SimpleApp::promptLoadProject()
 void SimpleApp::promptCreateProject()
 {
     std::string result = ofSystemTextBoxDialog("Project Name");
+
     if (!result.empty())
     {
         createProject(result);
@@ -593,7 +601,6 @@ void SimpleApp::loadSettings()
     {
         ofLogError("Settings::setup") << exc.displayText();
     }
-
 }
 
 
@@ -704,7 +711,6 @@ Json::Value SimpleApp::toJSON(const SimpleApp& object)
     
     return json;
 }
-
 
 
 } // namespace Kibio

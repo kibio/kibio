@@ -183,14 +183,13 @@ void Layer::draw()
                 ofSetColor(0);
             }
 
-            _brushTex.draw(layerMouse.x-25, layerMouse.y-25, 50, 50);
+            _brushTex.draw(layerMouse.x - 25, layerMouse.y - 25, 50, 50);
 
             ofPopStyle();
 
             _maskSurface.end();
         }
     }
-
 
     _surface.begin();
     ofClear(0, 0, 0, 0);
@@ -199,7 +198,6 @@ void Layer::draw()
 
     _maskShader.begin();
     _maskShader.setUniformTexture("maskTex", _maskSurface.getTexture(), 1);
-
 
     if (_video && _video->isLoaded())
     {

@@ -440,7 +440,6 @@ bool Project::save()
 
     try
     {
-
         std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
         while (iter != _layers.end())
