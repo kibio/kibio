@@ -38,11 +38,11 @@
 		<key>7FCE467AAABAFDFDEC90540103849C1531C4AF29</key>
 		<string>../..</string>
 		<key>CA29DB320F881B85D76220FC5498A4D1FA4F037C</key>
-		<string>../../../../../addons/ofxIO</string>
+		<string>../../../addons/ofxIO</string>
 		<key>CC64F4963C935629E4EEDB8221C0DA9B68D2313F</key>
 		<string>../../../addons/ofxMediaType</string>
 		<key>CE427DFEAC7CF46E0343E32288BC15C14F0689BB</key>
-		<string>../../../../../addons/ofxTaskQueue</string>
+		<string>../../../addons/ofxTaskQueue</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:kibio/kibio.git</string>
