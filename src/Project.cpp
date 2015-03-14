@@ -310,7 +310,7 @@ void Project::clearMaskAtPoint(const ofPoint& point)
     }
     else
     {
-        ofLogError("Project::deleteLayerAtPoint") << "No layer at point: " << point;
+        ofLogError("Project::clearMaskAtPoint") << "No mask at point: " << point;
     }
 }
     
