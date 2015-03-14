@@ -57,7 +57,7 @@ Project::~Project()
 
 void Project::update()
 {
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -73,7 +73,7 @@ void Project::update()
 
 void Project::draw()
 {
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -282,6 +282,11 @@ void Project::deleteLayerAtPoint(const ofPoint& point)
         _layers.erase(std::find(_layers.begin(),
                                 _layers.end(),
                                 layer));
+        
+        if (_lastSelectedLayer && _lastSelectedLayer->getId() == layer->getId())
+        {
+            _lastSelectedLayer.reset();
+        }
     }
     else
     {
@@ -308,12 +313,99 @@ void Project::clearMaskAtPoint(const ofPoint& point)
         ofLogError("Project::deleteLayerAtPoint") << "No layer at point: " << point;
     }
 }
+    
+void Project::shiftLayer(LayerShift shift)
+{
+    if (_lastSelectedLayer)
+    {
+        shiftLayer(_lastSelectedLayer, shift);
+    }
+}
+    
+void Project::shiftLayer(Layer::SharedPtr layer, LayerShift shift)
+{
+    if (layer)
+    {
+        
+        if (shift == LAYER_SHIFT_UP)
+        {
+
+            std::deque<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
+            
+            while (iter != _layers.end() - 1)
+            {
+                if ((*iter) && (*iter)->getId() == layer->getId())
+                {
+                    std::iter_swap(iter, iter + 1);
+                    break;
+                }
+                
+                ++iter;
+            }
+        }
+        else if (shift == LAYER_SHIFT_DOWN)
+        {
+            std::deque<std::shared_ptr<Layer> >::iterator iter = _layers.begin() + 1;
+            
+            while (iter != _layers.end())
+            {
+                if ((*iter) && (*iter)->getId() == layer->getId())
+                {
+                    std::iter_swap(iter, iter - 1);
+                    break;
+                }
+                
+                ++iter;
+            }
+        }
+        if (shift == LAYER_SHIFT_TOP)
+        {
+            // check if this is already the top layer, if so ignore
+            if (layer->getId() != _layers[_layers.size() - 1]->getId())
+            {
+                std::deque<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
+                
+                while (iter != _layers.end())
+                {
+                    if ((*iter) && (*iter)->getId() == layer->getId())
+                    {
+                        _layers.erase(iter);
+                        _layers.push_back(layer);
+                        break;
+                    }
+                    
+                    ++iter;
+                }
+            }
+        }
+        else if (shift == LAYER_SHIFT_BOTTOM)
+        {
+            // check if this is already the bottom layer, if so ignore
+            if (layer->getId() != _layers[0]->getId())
+            {
+                std::deque<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
+                
+                while (iter != _layers.end())
+                {
+                    if ((*iter) && (*iter)->getId() == layer->getId())
+                    {
+                        _layers.erase(iter);
+                        _layers.push_front(layer);
+                        break;
+                    }
+                    
+                    ++iter;
+                }
+            }
+        }
+    }
+}
 
 std::shared_ptr<Layer> Project::getLayerAtPoint(const ofPoint& point) const
 {
     std::shared_ptr<Layer> empty;
 
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.end() - 1;
 
     while (iter != _layers.begin() - 1)
     {
@@ -440,7 +532,7 @@ bool Project::save()
 
     try
     {
-        std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+        std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
         while (iter != _layers.end())
         {
@@ -515,7 +607,7 @@ bool Project::isLoaded() const
 
 bool Project::isCornerHovered(const ofPoint& point) const
 {
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
     while (iter != _layers.end())
     {
@@ -636,7 +728,7 @@ Json::Value Project::toJSON(const Project& object)
 {
     Json::Value json;
 
-    std::vector<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
+    std::deque<std::shared_ptr<Layer> >::const_iterator iter = object._layers.begin();
 
     while (iter != object._layers.end())
     {
@@ -682,7 +774,7 @@ void Project::keyPressed(ofKeyEventArgs& key)
     {
         if ('x' == key.key)
         {
-            std::vector<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
+            std::deque<std::shared_ptr<Layer> >::const_iterator iter = _layers.begin();
 
             while (iter != _layers.end())
             {
@@ -701,6 +793,28 @@ void Project::keyPressed(ofKeyEventArgs& key)
         {
             ofPoint mouse(ofGetMouseX(), ofGetMouseY());
             clearMaskAtPoint(mouse);
+        }
+        else if (key.key == ']')
+        {
+            if (ofGetKeyPressed(OF_KEY_SHIFT))
+            {
+                shiftLayer(LAYER_SHIFT_TOP);
+            }
+            else
+            {
+                shiftLayer(LAYER_SHIFT_UP);
+            }
+        }
+        else if (key.key == '[')
+        {
+            if (ofGetKeyPressed(OF_KEY_SHIFT))
+            {
+                shiftLayer(LAYER_SHIFT_BOTTOM);
+            }
+            else
+            {
+                shiftLayer(LAYER_SHIFT_DOWN);
+            }
         }
 
     }
@@ -739,27 +853,10 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     if (layer && !isCornerHovered(mouse))
     {
-
-        // check if this is already the top layer, if so ignore
-        if (layer->getId() != _layers[_layers.size() - 1]->getId())
-        {
-            std::vector<std::shared_ptr<Layer> >::iterator iter = _layers.begin();
-
-            while (iter != _layers.end())
-            {
-                if ((*iter) && (*iter)->getId() == layer->getId())
-                {
-                    _layers.erase(iter);
-                    _layers.push_back(layer);
-                    break;
-                }
-
-                ++iter;
-            }
-        }
-        
         _dragging = layer;
         _dragStart = mouse;
+        _lastSelectedLayer = layer;
+        shiftLayer(layer, LAYER_SHIFT_TOP);
     }
 }
 

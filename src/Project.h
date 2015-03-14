@@ -51,6 +51,14 @@ public:
         SCALE,
         NONE
     };
+    
+    enum LayerShift
+    {
+        LAYER_SHIFT_UP,
+        LAYER_SHIFT_DOWN,
+        LAYER_SHIFT_TOP,
+        LAYER_SHIFT_BOTTOM
+    };
 
     /// \brief Create a project.
     /// \param parent A reference to the Project's parent.
@@ -90,6 +98,15 @@ public:
     /// \brief Set the current transform type.
     /// \param type The TransformType to set.
     void setTransform(TransformType type);
+    
+    /// \brief Shift the layer current layer in the stack.
+    /// \param shift The type of layer shift to apply to layer.
+    void shiftLayer(LayerShift shift);
+    
+    /// \brief Shift the layer in the stack.
+    /// \param layer The layer to shift.
+    /// \param shift The type of layer shift to apply to layer.
+    void shiftLayer(Layer::SharedPtr layer, LayerShift shift);
 
     /// \brief Get the layer at point.
     /// \param point The point used to get the layer by.
@@ -177,10 +194,11 @@ private:
     Poco::Path _path;
 
     /// \brief The layers.
-    std::vector<Layer::SharedPtr> _layers;
+    std::deque<Layer::SharedPtr> _layers;
 
     Layer::SharedPtr _dragging;
     ofPoint _dragStart;
+    Layer::SharedPtr _lastSelectedLayer;
 
     friend class Layer;
 };
