@@ -81,10 +81,13 @@ void SimpleApp::setup()
     ofSetWindowTitle("Kibio");
     ofEnableAntiAliasing();
     ofEnableTextureEdgeHack();
+    ofHideCursor();
+    
     ofSetCircleResolution(50);
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
+    ofLoadImage(_cursor, "images/cursor.png");
 
     loadSettings();
 
@@ -157,6 +160,11 @@ void SimpleApp::draw()
     if (_ui.isVisible())
     {
         _ui.draw();
+    }
+    
+    if (_mode == EDIT)
+    {
+        _cursor.draw(ofPoint(ofGetMouseX(), ofGetMouseY()));
     }
 }
 
@@ -246,7 +254,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         else if ('b' == key.key)
         {
-            _ui.simulateClick(BUTTON_TOOL_BRUSH);
+//            _ui.simulateClick(BUTTON_TOOL_BRUSH);
         }
     }
 }

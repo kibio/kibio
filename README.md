@@ -1,6 +1,10 @@
 Kibio
 =====
 
+![Screenshot](media/readme-screenshot.png)
+
+Kibio is an easy-to-use tool for projection mapping videos in real-time. Download it [here](https://github.com/kibio/kibio/releases).
+
 ### Use
 
 1. Collect videos and mask and place them in the proejct folder.  You can start with the `HelloWorld` project in `/Users/YOUR_USERNAME/Documents/Kibio/`.
@@ -44,6 +48,11 @@ Kibio
 - Masking
   - ⌘Drag - Mask Pen Tool
   - ⌘⇧S - Mask Erase Tool
+- Layer Order
+  - ⌘] - Move layer up
+  - ⌘[ - Move layer down
+  - ⇧⌘] - Move layer to top
+  - ⇧⌘[ - Move layer to bottom
 
 ####_Key_
 

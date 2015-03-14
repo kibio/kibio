@@ -3,6 +3,7 @@
 ## v0.2.0
 (upcoming)
 
+- Add ubuntu mouse image to alleviate GLFW bug in OF Master branch.
 - Add layer order management with key bindings (`cmd-[`, `cmd-]`, `shift-cmd-[`, and `shift-cmd-]`) ([#30](https://github.com/kibio/kibio/issues/30)).
 - Add Interface with icon buttons ([#24](https://github.com/kibio/kibio/issues/24)).
 - New projects can now be created from inside the app with `cmd-n`.

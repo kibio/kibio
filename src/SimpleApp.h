@@ -234,6 +234,7 @@ protected:
 
     ofTexture _kibioLogo;
     ofTexture _kibioLogoMini;
+    ofTexture _cursor;
 
 };
 
