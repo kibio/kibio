@@ -1,9 +1,15 @@
 # Kibio Changelog
 
-## v0.2.0
-(upcoming)
+## v0.2.1 (OS X 10.10 Yosemite Only)
+(2015-03-14)
 
-- Add ubuntu mouse image to alleviate GLFW bug in OF Master branch.
+- Using GLFW 3.1
+- Remove Ubuntu mouse.
+
+## v0.2.0
+(2015-03-14)
+
+- Add Ubuntu mouse image to alleviate GLFW bug in OF Master branch.
 - Add layer order management with key bindings (`cmd-[`, `cmd-]`, `shift-cmd-[`, and `shift-cmd-]`) ([#30](https://github.com/kibio/kibio/issues/30)).
 - Add Interface with icon buttons ([#24](https://github.com/kibio/kibio/issues/24)).
 - New projects can now be created from inside the app with `cmd-n`.

@@ -81,7 +81,6 @@ void SimpleApp::setup()
     ofSetWindowTitle("Kibio");
     ofEnableAntiAliasing();
     ofEnableTextureEdgeHack();
-    ofHideCursor();
     
     ofSetCircleResolution(50);
 
@@ -162,10 +161,10 @@ void SimpleApp::draw()
         _ui.draw();
     }
     
-    if (_mode == EDIT)
-    {
-        _cursor.draw(ofPoint(ofGetMouseX(), ofGetMouseY()));
-    }
+//    if (_mode == EDIT)
+//    {
+//        _cursor.draw(ofPoint(ofGetMouseX(), ofGetMouseY()));
+//    }
 }
 
 
