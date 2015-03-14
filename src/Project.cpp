@@ -737,7 +737,7 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
     std::shared_ptr<Layer> layer = getLayerAtPoint(mouse);
 
-    if (layer)
+    if (layer && !isCornerHovered(mouse))
     {
 
         // check if this is already the top layer, if so ignore
@@ -756,14 +756,10 @@ void Project::mousePressed(ofMouseEventArgs& mouse)
 
                 ++iter;
             }
-
         }
-
-        if (!isCornerHovered(mouse))
-        {
-            _dragging = layer;
-            _dragStart = mouse;
-        }
+        
+        _dragging = layer;
+        _dragStart = mouse;
     }
 }
 

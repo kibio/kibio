@@ -226,7 +226,8 @@ void Layer::draw()
         if (layer &&
             !_parent._dragging &&
             _parent._transform != Project::NONE &&
-            layer->getId() == getId())
+            layer->getId() == getId() &&
+            !_parent.isCornerHovered(mouse))
         {
             ofSetColor(_highlightColor);
         }
