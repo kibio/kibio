@@ -37,6 +37,7 @@ ImageButton::ImageButton(const std::string& imagePath,
                          ofColor color,
                          ofColor highlightColor,
                          ofColor shadowColor):
+    _imagePath(imagePath),
     type(_type),
     _sticky(sticky),
     _buttonSelectEvent(buttonSelectEvent),
@@ -49,14 +50,19 @@ ImageButton::ImageButton(const std::string& imagePath,
     _clickSimulated(false),
     _enabled(true)
 {
-    ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
-    _image.load(imagePath);
 }
 
 
 ImageButton::~ImageButton()
 {
     ofRemoveListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
+}
+
+
+void ImageButton::setup()
+{
+    ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
+    _image.loadImage(_imagePath);
 }
 
 
@@ -277,14 +283,6 @@ UserInterface::UserInterface():
                                  _highlightColor,
                                  _shadowColor))
 {
-    _font.load("media/Verdana.ttf", _fontSize);
-    ofLoadImage(_infoSlide, "images/info-slide.png");
-
-    ofAddListener(buttonSelectEvent, this,&UserInterface::onButtonSelect);
-    ofAddListener(buttonDeselectEvent, this,&UserInterface::onButtonDeselect);
-
-    placeIcons();
-    show();
 }
 
 
@@ -292,6 +290,29 @@ UserInterface::~UserInterface()
 {
     ofRemoveListener(buttonSelectEvent, this,&UserInterface::onButtonSelect);
     ofRemoveListener(buttonDeselectEvent, this,&UserInterface::onButtonDeselect);
+}
+
+
+void UserInterface::setup()
+{
+    _font.loadFont("media/Verdana.ttf", _fontSize);
+    ofLoadImage(_infoSlide, "images/info-slide.png");
+
+    _openProjectButton.setup();
+    _newProjectButton.setup();
+    _saveProjectButton.setup();
+    _infoButton.setup();
+    _toggleModeButton.setup();
+    _toolBrushButton.setup();
+    _toolTranslateButton.setup();
+    _toolRotateButton.setup();
+    _toolScaleButton.setup();
+
+    ofAddListener(buttonSelectEvent, this,&UserInterface::onButtonSelect);
+    ofAddListener(buttonDeselectEvent, this,&UserInterface::onButtonDeselect);
+
+    placeIcons();
+    show();
 }
 
 

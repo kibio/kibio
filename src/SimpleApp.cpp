@@ -48,15 +48,6 @@ SimpleApp::SimpleApp():
     _mode(EDIT),
     _logger(EventLoggerChannel::makeShared())
 {
-    ofAddListener(_logger->event, this, &SimpleApp::onLoggerEvent);
-    ofSetLoggerChannel(_logger);
-    ofSetLogLevel("ofFbo", OF_LOG_ERROR);
-    ofSetLogLevel("ofAVFoundationPlayer::play", OF_LOG_ERROR);
-    ofSetLogLevel("ofShader", OF_LOG_ERROR);
-    ofSetLogLevel("linkProgram()", OF_LOG_ERROR);
-    
-    ofAddListener(_ui.buttonSelectEvent, this, &SimpleApp::onUIButtonSelect);
-    ofAddListener(_ui.buttonDeselectEvent, this, &SimpleApp::onUIButtonDeselect);
 }
 
 
@@ -75,6 +66,16 @@ void SimpleApp::setup()
     ofSetDataPathRoot("../Resources/data/");
 #endif
 
+    ofAddListener(_logger->event, this, &SimpleApp::onLoggerEvent);
+    ofSetLoggerChannel(_logger);
+    ofSetLogLevel("ofFbo", OF_LOG_ERROR);
+    ofSetLogLevel("ofAVFoundationPlayer::play", OF_LOG_ERROR);
+    ofSetLogLevel("ofShader", OF_LOG_ERROR);
+    ofSetLogLevel("linkProgram()", OF_LOG_ERROR);
+
+    ofAddListener(_ui.buttonSelectEvent, this, &SimpleApp::onUIButtonSelect);
+    ofAddListener(_ui.buttonDeselectEvent, this, &SimpleApp::onUIButtonDeselect);
+
     ofSetFrameRate(60);
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetWindowTitle("Kibio");
@@ -86,8 +87,8 @@ void SimpleApp::setup()
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
 
     loadSettings();
-    _ui.placeIcons();
-    
+
+    _ui.setup();
 }
 
 void SimpleApp::exit()
@@ -110,6 +111,7 @@ void SimpleApp::update()
     {
         _currentProject->update();
     }
+    
     _ui.update();
 }
 

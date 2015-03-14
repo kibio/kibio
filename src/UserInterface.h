@@ -73,6 +73,8 @@ public:
 
     ~ImageButton();
 
+    void setup();
+
     void set(int x, int y, int width, int height);
     void update(const ofPoint& mouse);
     void draw(const ofPoint& shadowOffset=ofPoint::zero());
@@ -90,6 +92,8 @@ public:
     UIButtonType type;
 
 protected:
+    std::string _imagePath;
+
     bool _selected;
     bool _hovered;
     bool _sticky;
@@ -113,6 +117,7 @@ public:
     UserInterface();
     ~UserInterface();
 
+    void setup();
     void update();
     void draw();
     void drawInfoSlide();

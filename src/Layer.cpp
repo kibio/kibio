@@ -45,7 +45,6 @@ Layer::Layer(Project& parent):
     _maskSurface.allocate(1, 1, GL_RGBA, 8);
 
     ofLoadImage(_brushTex, "brushes/brush.png");
-    
 }
 
 
