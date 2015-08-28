@@ -179,6 +179,8 @@ public:
     void mousePressed(ofMouseEventArgs& mouse);
     void mouseReleased(ofMouseEventArgs& mouse);
     void mouseScrolled(ofMouseEventArgs& mouse);
+	void mouseEntered(ofMouseEventArgs& mouse){};
+	void mouseExited(ofMouseEventArgs& mouse){};
 
 private:
     /// \brief A reference to the project's parent.
