@@ -208,6 +208,7 @@ void SimpleApp::draw()
 
 void SimpleApp::keyPressed(ofKeyEventArgs& key)
 {
+	cout << "key-pressed " << key.key << "/" << key.keycode << "/" << key.codepoint << endl;
 #if defined(TARGET_OSX)
     int modifier = OF_KEY_COMMAND;
 #else
@@ -216,13 +217,15 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
 
     if (ofGetKeyPressed(modifier))
     {
+		cout << "CONTROL IS PRESSED!!! and also " << key.key << " aka " << key.keycode  << " aka " << key.codepoint  << " we want " << (int)('e') << endl;
         if ('k' == key.key)
         {
             // TODO: is this platform independent?.  No.
             ofSystem("open " + getUserProjectsPath().toString());
         }
-        else if ('e' == key.key)
+        else if ('e' == key.key || 5 == key.key /* win hack */)
         {
+			
             switch (_mode)
             {
                 case EDIT:
@@ -237,21 +240,22 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
                     break;
             }
         }
-        else if ('f' == key.key)
+        else if ('f' == key.key || 6 == key.key /* win hack */)
         {
             ofToggleFullscreen();
         }
-        else if ('o' == key.key)
+        else if ('o' == key.key || 15 == key.key /* win hack */)
         {
+			cout << "opening new project " << endl;
             // pass this through the UIButtonSelectEvent
             _ui.simulateClick(BUTTON_OPEN_PROJECT);
         }
-        else if ('n' == key.key)
+        else if ('n' == key.key || 14 == key.key /* win hack */)
         {
             // pass this through the UIButtonSelectEvent
             _ui.simulateClick(BUTTON_NEW_PROJECT);
         }
-        else if ('s' == key.key)
+        else if ('s' == key.key || 19 == key.key /* win hack */)
         {
             if (_currentProject)
             {
@@ -261,12 +265,12 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         
         // reduncency ignores order keys are pressed in
-        if (('s' == key.key && ofGetKeyPressed(OF_KEY_SHIFT)) ||
-            (key.key == OF_KEY_SHIFT && ofGetKeyPressed('s')))
+        if ((('s' == key.key || 19 == key.key) && ofGetKeyPressed(OF_KEY_SHIFT)) ||
+            (key.key == OF_KEY_SHIFT && (ofGetKeyPressed('s') || ofGetKeyPressed(19))))
         {
-
             std::string result = ofSystemTextBoxDialog("Project Name");
-            if (!result.empty())
+
+			if (!result.empty())
             {
                 saveProjectAs(result);
             }
@@ -513,10 +517,13 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
     
 void SimpleApp::promptLoadProject()
 {
+	cout << "loading ... " << getUserProjectsPath().toString()  << endl;
     ofFileDialogResult result = ofSystemLoadDialog("Open Project",
                                                    false,
                                                    getUserProjectsPath().toString());
-    if (!result.getName().empty())
+
+	
+	if (!result.getName().empty())
     {
         Poco::Path relativePath(result.getPath());
         
@@ -530,6 +537,10 @@ void SimpleApp::promptLoadProject()
             ofSystemAlertDialog("Invalid project file.");
         }
     }
+	else
+	{
+		ofLogWarning("SimpleApp::promptLoadProject") << "No project chosen";
+	}
 }
 
 void SimpleApp::promptCreateProject()
