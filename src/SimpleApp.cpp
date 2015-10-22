@@ -202,16 +202,23 @@ void SimpleApp::draw()
 //    {
 //        _cursor.draw(ofPoint(ofGetMouseX(), ofGetMouseY()));
 //    }
+
 }
 
 
 void SimpleApp::keyPressed(ofKeyEventArgs& key)
 {
-    if (ofGetKeyPressed(OF_KEY_COMMAND))
+#if defined(TARGET_OSX)
+    int modifier = OF_KEY_COMMAND;
+#else
+    int modifier = OF_KEY_CONTROL;
+#endif
+
+    if (ofGetKeyPressed(modifier))
     {
         if ('k' == key.key)
         {
-            // is this platform independent?
+            // TODO: is this platform independent?.  No.
             ofSystem("open " + getUserProjectsPath().toString());
         }
         else if ('e' == key.key)

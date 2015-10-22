@@ -296,7 +296,12 @@ UserInterface::~UserInterface()
 void UserInterface::setup()
 {
     _font.load("media/Verdana.ttf", _fontSize);
-    ofLoadImage(_infoSlide, "images/info-slide.png");
+
+#if defined(TARGET_OSX)
+    ofLoadImage(_infoSlide, "images/info-slide-osx.png");
+#else
+    ofLoadImage(_infoSlide, "images/info-slide-win-lin.png");
+#endif
 
     _openProjectButton.setup();
     _newProjectButton.setup();

@@ -27,6 +27,7 @@
 #pragma once
 
 
+#include <chrono>
 #include <json/json.h>
 #include "ofMain.h"
 #include "UserInterface.h"
@@ -240,6 +241,13 @@ protected:
 	/// \brief A cursor texture (hack).
 	/// \todo This is/was a hack for broken windowing software.
 	// ofTexture _cursor;
+
+    /// \brief A collection of logger messages for display.
+    std::vector<LoggerEventArgs> _log;
+
+    /// \brief A log duration of 5 seconds.
+    std::chrono::seconds _logDuration;
+
 
 };
 

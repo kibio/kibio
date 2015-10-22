@@ -772,7 +772,13 @@ bool Project::fromJSON(const Json::Value& json, Project& object)
 
 void Project::keyPressed(ofKeyEventArgs& key)
 {
-    if (ofGetKeyPressed(OF_KEY_COMMAND))
+#if defined(TARGET_OSX)
+    int modifier = OF_KEY_COMMAND;
+#else
+    int modifier = OF_KEY_CONTROL;
+#endif
+
+    if (ofGetKeyPressed(modifier))
     {
         if ('x' == key.key)
         {
