@@ -46,7 +46,8 @@ const std::string SimpleApp::DEFAULT_PROJECT("HelloWorld");
 SimpleApp::SimpleApp():
 	_version(SETTINGS_VERSION),
     _mode(EDIT),
-	_logger(std::make_shared<EventLoggerChannel>())
+	_logger(std::make_shared<EventLoggerChannel>()),
+    _logDuration(5)
 {
 }
 
@@ -115,6 +116,22 @@ void SimpleApp::update()
     }
     
     _ui.update();
+
+    std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+
+    auto i = _log.begin();
+
+    while (i != _log.end())
+    {
+        if (now > i->timestamp + _logDuration)
+        {
+            i = _log.erase(i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
 }
 
 
@@ -132,14 +149,25 @@ void SimpleApp::draw()
 
     ofSetColor(255);
 
-    if (_currentProject)
-    {
-        _currentProject->draw();
-    }
-
-
     if (EDIT == _mode)
     {
+        ofSetColor(255, 127);
+
+        int lineHeight = 14;
+        int y = ofGetHeight() - 4 * lineHeight;
+        int x = lineHeight;
+
+        for (auto& l : _log)
+        {
+            std::stringstream ss;
+
+            ss << "[" << l.module << "] - ";
+            ss << l.message;
+            
+            ofDrawBitmapString(ss.str(), x, y);
+            y -= lineHeight;
+        }
+
 //        ofSetColor(255);
 //        _kibioLogoMini.draw(10, ofGetHeight() - _kibioLogoMini.getHeight() - 10);
 //    
@@ -155,7 +183,16 @@ void SimpleApp::draw()
 //        
 //        ofDrawBitmapString(str.str(), 15, 15);
     }
-    
+
+    ofSetColor(255);
+
+    if (_currentProject)
+    {
+        _currentProject->draw();
+    }
+
+    ofSetColor(255);
+
     if (_ui.isVisible())
     {
         _ui.draw();
@@ -228,7 +265,8 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
             }
         }
     }
-    else{ // single keys
+    else
+    { // single keys
         
         if ('h' == key.key)
         {
@@ -253,7 +291,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         else if ('b' == key.key)
         {
-//            _ui.simulateClick(BUTTON_TOOL_BRUSH);
+            _ui.simulateClick(BUTTON_TOOL_BRUSH);
         }
     }
 }
@@ -394,7 +432,6 @@ Poco::Path SimpleApp::getUserProjectsPath() const
         {
             ofLogError("Settings::setup") << exc.displayText();
             ofSystemAlertDialog("Error: A Kibio projects folder does not exist and one could not be created");
-            
         }
     }
 
@@ -418,7 +455,8 @@ std::shared_ptr<Project> SimpleApp::getCurrentProject()
 {
     return _currentProject;
 }
-    
+
+
 bool SimpleApp::createProject(const std::string& name)
 {
     std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
@@ -500,6 +538,7 @@ void SimpleApp::promptCreateProject()
 
 bool SimpleApp::onLoggerEvent(const LoggerEventArgs& e)
 {
+    _log.push_back(e);
     return false;
 }
     
