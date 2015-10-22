@@ -327,7 +327,7 @@ void UserInterface::update()
         _saveProjectButton.update(mouse);
         _infoButton.update(mouse);
         _toggleModeButton.update(mouse);
-//        _toolBrushButton.update(mouse);
+        _toolBrushButton.update(mouse);
         _toolTranslateButton.update(mouse);
         _toolRotateButton.update(mouse);
         _toolScaleButton.update(mouse);
@@ -359,7 +359,7 @@ void UserInterface::draw()
         _saveProjectButton.draw(_shadowOffset);
         _infoButton.draw(_shadowOffset);
         _toggleModeButton.draw(_shadowOffset);
-//        _toolBrushButton.draw(_shadowOffset);
+        _toolBrushButton.draw(_shadowOffset);
         _toolTranslateButton.draw(_shadowOffset);
         _toolRotateButton.draw(_shadowOffset);
         _toolScaleButton.draw(_shadowOffset);
