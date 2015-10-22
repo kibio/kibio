@@ -44,9 +44,9 @@ const std::string SimpleApp::DEFAULT_PROJECT("HelloWorld");
 
 
 SimpleApp::SimpleApp():
-    _version(0),
+	_version(SETTINGS_VERSION),
     _mode(EDIT),
-    _logger(EventLoggerChannel::makeShared())
+	_logger(std::make_shared<EventLoggerChannel>())
 {
 }
 
@@ -86,7 +86,7 @@ void SimpleApp::setup()
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
-    ofLoadImage(_cursor, "images/cursor.png");
+    //ofLoadImage(_cursor, "images/cursor.png");
 
     loadSettings();
 

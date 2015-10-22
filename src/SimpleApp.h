@@ -48,24 +48,16 @@ public:
     /// \brief Destroy the SimpleApp.
     ~SimpleApp();
 
-    void setup();
-    void update();
-    void draw();
+    void setup() override;
+    void update() override;
+    void draw() override;
+    void exit() override;
+    void keyPressed(ofKeyEventArgs& key) override;
+    void windowResized(ofResizeEventArgs &resize) override;
 
-    /// \brief Exit callback.
-    void exit();
-
-    void keyPressed(ofKeyEventArgs& key);
-    void windowResized(ofResizeEventArgs &resize);
-
-    /// \brief Get the current mode.
-    Mode getMode() const;
-
-    /// \brief Get the user's projects path.
-    Poco::Path getUserProjectsPath() const;
-
-    /// \brief Get the user's projects path.
-    std::shared_ptr<Project> getCurrentProject();
+    Mode getMode() const override;
+    Poco::Path getUserProjectsPath() const override;
+    std::shared_ptr<Project> getCurrentProject() override;
 
     /// \brief Set the user's projects path.
     /// \param the user's projects path.
@@ -104,10 +96,17 @@ public:
     /// \brief Save As the current project.
     bool saveProjectAs(const std::string& name);
 
-    bool onLoggerEvent(const LoggerEventArgs& e);
+	/// \brief Logger event callback.
+	/// \param evt The LoggerEventArgs.
+    bool onLoggerEvent(const LoggerEventArgs& evt);
 
-    void onUIButtonSelect(const UserInterfaceEvent& args);
-    void onUIButtonDeselect(const UserInterfaceEvent& args);
+	/// \brief UI Button event callback.
+	/// \param evt The UserInterfaceEvent.
+    void onUIButtonSelect(const UserInterfaceEvent& evt);
+
+	/// \brief UI Button event callback.
+	/// \param evt The UserInterfaceEvent.
+	void onUIButtonDeselect(const UserInterfaceEvent& evt);
 
     enum
     {
@@ -210,7 +209,6 @@ public:
         return true;
     }
 
-
 protected:
     /// \brief The current app mode.
     Mode _mode;
@@ -224,6 +222,7 @@ protected:
     /// \brief The settings version.
     int _version;
 
+	/// \brief The user interface manager.
     UserInterface _ui;
 
     /// \brief The current project.
@@ -232,9 +231,15 @@ protected:
     /// \brief The event logger channel.
     std::shared_ptr<EventLoggerChannel> _logger;
 
+	/// \brief The kibio logo.
     ofTexture _kibioLogo;
-    ofTexture _kibioLogoMini;
-    ofTexture _cursor;
+
+	/// \brief The small kibio logo.
+	ofTexture _kibioLogoMini;
+
+	/// \brief A cursor texture (hack).
+	/// \todo This is/was a hack for broken windowing software.
+	// ofTexture _cursor;
 
 };
 

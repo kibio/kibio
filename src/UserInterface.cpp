@@ -62,7 +62,7 @@ ImageButton::~ImageButton()
 void ImageButton::setup()
 {
     ofAddListener(ofEvents().mouseReleased, this, &ImageButton::mouseReleased);
-    _image.loadImage(_imagePath);
+    _image.load(_imagePath);
 }
 
 
@@ -295,7 +295,7 @@ UserInterface::~UserInterface()
 
 void UserInterface::setup()
 {
-    _font.loadFont("media/Verdana.ttf", _fontSize);
+    _font.load("media/Verdana.ttf", _fontSize);
     ofLoadImage(_infoSlide, "images/info-slide.png");
 
     _openProjectButton.setup();

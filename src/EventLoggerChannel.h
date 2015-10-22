@@ -62,11 +62,6 @@ public:
              const char* format,
              va_list args);
 
-    static SharedPtr makeShared()
-    {
-        return SharedPtr(new EventLoggerChannel());
-    }
-
     ofEvent<const LoggerEventArgs> event;
 
 };
