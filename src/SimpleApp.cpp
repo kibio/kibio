@@ -665,13 +665,11 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 
     object._version = json.get("version", 0).asInt();
 
-
     if (json.isMember("project"))
     {
         // TODO: load default project if last open project has been deleted
         object.loadProject(json["project"].asString());
     }
-
 
     if (json.isMember("screen"))
     {
@@ -683,7 +681,6 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
         
         ofSetFullscreen(json["screen"].get("fullscreen", false).asBool());
     }
-    
     
     return true;
 }

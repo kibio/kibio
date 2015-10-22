@@ -58,6 +58,7 @@ public:
     UIButtonType type;
 };
 
+	
 /// \brief A an image button
 class ImageButton
 {
