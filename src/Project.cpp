@@ -135,8 +135,9 @@ void Project::dragEvent(ofDragInfo& dragInfo)
             }
             else
             {
-                ofLogError("Project::dragEvent") << relativePath.toString()
-                    << " was not added to this project because it is not located in the project folder";
+                std::string msg = relativePath.getFileName() + "  was not added to the project because it is not located in the project folder.";
+                ofSystemAlertDialog(msg);
+                ofLogError("Project::dragEvent") << msg;
             }
 
         }
@@ -150,8 +151,9 @@ void Project::dragEvent(ofDragInfo& dragInfo)
             }
             else
             {
-                ofLogError("Project::dragEvent") << relativePath.toString()
-                    << " was not added to this project because it is not located in the project folder";
+                std::string msg = relativePath.getFileName() + "  was not added to the project because it is not located in the project folder.";
+                ofSystemAlertDialog(msg);
+                ofLogError("Project::dragEvent") << msg;
             }
         }
         else
