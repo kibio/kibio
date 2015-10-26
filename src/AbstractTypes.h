@@ -52,6 +52,8 @@ public:
     {
     }
 
+	/// \brief Get the current application Mode.
+	/// \returns the current application Mode.
     virtual Mode getMode() const = 0;
 
     /// \brief Get the user's projects path.

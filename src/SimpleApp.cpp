@@ -44,9 +44,10 @@ const std::string SimpleApp::DEFAULT_PROJECT("HelloWorld");
 
 
 SimpleApp::SimpleApp():
-    _version(0),
+	_version(SETTINGS_VERSION),
     _mode(EDIT),
-    _logger(EventLoggerChannel::makeShared())
+	_logger(std::make_shared<EventLoggerChannel>()),
+    _logDuration(5)
 {
 }
 
@@ -86,7 +87,7 @@ void SimpleApp::setup()
 
     ofLoadImage(_kibioLogo, "images/kibio.png");
     ofLoadImage(_kibioLogoMini, "images/kibio-k.png");
-    ofLoadImage(_cursor, "images/cursor.png");
+    //ofLoadImage(_cursor, "images/cursor.png");
 
     loadSettings();
 
@@ -115,6 +116,22 @@ void SimpleApp::update()
     }
     
     _ui.update();
+
+    std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+
+    auto i = _log.begin();
+
+    while (i != _log.end())
+    {
+        if (now > i->timestamp + _logDuration)
+        {
+            i = _log.erase(i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
 }
 
 
@@ -132,14 +149,25 @@ void SimpleApp::draw()
 
     ofSetColor(255);
 
-    if (_currentProject)
-    {
-        _currentProject->draw();
-    }
-
-
     if (EDIT == _mode)
     {
+        ofSetColor(255, 127);
+
+        int lineHeight = 14;
+        int y = ofGetHeight() - 4 * lineHeight;
+        int x = lineHeight;
+
+        for (auto& l : _log)
+        {
+            std::stringstream ss;
+
+            ss << "[" << l.module << "] - ";
+            ss << l.message;
+            
+            ofDrawBitmapString(ss.str(), x, y);
+            y -= lineHeight;
+        }
+
 //        ofSetColor(255);
 //        _kibioLogoMini.draw(10, ofGetHeight() - _kibioLogoMini.getHeight() - 10);
 //    
@@ -155,7 +183,16 @@ void SimpleApp::draw()
 //        
 //        ofDrawBitmapString(str.str(), 15, 15);
     }
-    
+
+    ofSetColor(255);
+
+    if (_currentProject)
+    {
+        _currentProject->draw();
+    }
+
+    ofSetColor(255);
+
     if (_ui.isVisible())
     {
         _ui.draw();
@@ -165,20 +202,28 @@ void SimpleApp::draw()
 //    {
 //        _cursor.draw(ofPoint(ofGetMouseX(), ofGetMouseY()));
 //    }
+
 }
 
 
 void SimpleApp::keyPressed(ofKeyEventArgs& key)
 {
-    if (ofGetKeyPressed(OF_KEY_COMMAND))
+#if defined(TARGET_OSX)
+    int modifier = OF_KEY_COMMAND;
+#else
+    int modifier = OF_KEY_CONTROL;
+#endif
+
+    if (ofGetKeyPressed(modifier))
     {
         if ('k' == key.key)
         {
-            // is this platform independent?
+            // TODO: is this platform independent?.  No.
             ofSystem("open " + getUserProjectsPath().toString());
         }
-        else if ('e' == key.key)
+        else if ('e' == key.key || 5 == key.key /* win hack */)
         {
+			
             switch (_mode)
             {
                 case EDIT:
@@ -193,21 +238,22 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
                     break;
             }
         }
-        else if ('f' == key.key)
+        else if ('f' == key.key || 6 == key.key /* win hack */)
         {
             ofToggleFullscreen();
         }
-        else if ('o' == key.key)
+        else if ('o' == key.key || 15 == key.key /* win hack */)
         {
+			cout << "opening new project " << endl;
             // pass this through the UIButtonSelectEvent
             _ui.simulateClick(BUTTON_OPEN_PROJECT);
         }
-        else if ('n' == key.key)
+        else if ('n' == key.key || 14 == key.key /* win hack */)
         {
             // pass this through the UIButtonSelectEvent
             _ui.simulateClick(BUTTON_NEW_PROJECT);
         }
-        else if ('s' == key.key)
+        else if ('s' == key.key || 19 == key.key /* win hack */)
         {
             if (_currentProject)
             {
@@ -217,18 +263,19 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         
         // reduncency ignores order keys are pressed in
-        if (('s' == key.key && ofGetKeyPressed(OF_KEY_SHIFT)) ||
-            (key.key == OF_KEY_SHIFT && ofGetKeyPressed('s')))
+        if ((('s' == key.key || 19 == key.key) && ofGetKeyPressed(OF_KEY_SHIFT)) ||
+            (key.key == OF_KEY_SHIFT && (ofGetKeyPressed('s') || ofGetKeyPressed(19))))
         {
-
             std::string result = ofSystemTextBoxDialog("Project Name");
-            if (!result.empty())
+
+			if (!result.empty())
             {
                 saveProjectAs(result);
             }
         }
     }
-    else{ // single keys
+    else
+    { // single keys
         
         if ('h' == key.key)
         {
@@ -253,7 +300,7 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
         }
         else if ('b' == key.key)
         {
-//            _ui.simulateClick(BUTTON_TOOL_BRUSH);
+            _ui.simulateClick(BUTTON_TOOL_BRUSH);
         }
     }
 }
@@ -394,7 +441,6 @@ Poco::Path SimpleApp::getUserProjectsPath() const
         {
             ofLogError("Settings::setup") << exc.displayText();
             ofSystemAlertDialog("Error: A Kibio projects folder does not exist and one could not be created");
-            
         }
     }
 
@@ -418,7 +464,8 @@ std::shared_ptr<Project> SimpleApp::getCurrentProject()
 {
     return _currentProject;
 }
-    
+
+
 bool SimpleApp::createProject(const std::string& name)
 {
     std::shared_ptr<Project> project = std::shared_ptr<Project>(new Project(*this));
@@ -471,7 +518,8 @@ void SimpleApp::promptLoadProject()
     ofFileDialogResult result = ofSystemLoadDialog("Open Project",
                                                    false,
                                                    getUserProjectsPath().toString());
-    if (!result.getName().empty())
+
+	if (!result.getName().empty())
     {
         Poco::Path relativePath(result.getPath());
         
@@ -485,6 +533,10 @@ void SimpleApp::promptLoadProject()
             ofSystemAlertDialog("Invalid project file.");
         }
     }
+	else
+	{
+		ofLogWarning("SimpleApp::promptLoadProject") << "No project chosen";
+	}
 }
 
 void SimpleApp::promptCreateProject()
@@ -500,6 +552,7 @@ void SimpleApp::promptCreateProject()
 
 bool SimpleApp::onLoggerEvent(const LoggerEventArgs& e)
 {
+    _log.push_back(e);
     return false;
 }
     
@@ -665,13 +718,11 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
 
     object._version = json.get("version", 0).asInt();
 
-
     if (json.isMember("project"))
     {
         // TODO: load default project if last open project has been deleted
         object.loadProject(json["project"].asString());
     }
-
 
     if (json.isMember("screen"))
     {
@@ -683,7 +734,6 @@ bool SimpleApp::fromJSON(const Json::Value& json, SimpleApp& object)
         
         ofSetFullscreen(json["screen"].get("fullscreen", false).asBool());
     }
-    
     
     return true;
 }

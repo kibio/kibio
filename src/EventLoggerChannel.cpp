@@ -46,6 +46,7 @@ void EventLoggerChannel::log(ofLogLevel level,
     args.level = level;
     args.module = module;
     args.message = message;
+    args.timestamp = std::chrono::system_clock::now();
 
     event.notify(this, args);
 }

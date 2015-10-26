@@ -29,8 +29,7 @@
 int main()
 {
     ofGLWindowSettings windowSettings;
-    windowSettings.setGLVersion(3,3);
+    windowSettings.setGLVersion(3, 3);
     ofCreateWindow(windowSettings);
-
-    ofRunApp(new Kibio::SimpleApp());
+	ofRunApp(std::make_shared<Kibio::SimpleApp>());
 }

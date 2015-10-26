@@ -26,9 +26,11 @@
 #pragma once
 
 
+#include <chrono>
 #include <string>
 #include "ofLog.h"
 #include "ofEvents.h"
+#include "Poco/Timestamp.h"
 
 
 class LoggerEventArgs: public ofEventArgs
@@ -37,6 +39,7 @@ public:
     ofLogLevel level;
     std::string module;
     std::string message;
+    std::chrono::time_point<std::chrono::system_clock> timestamp;
 };
 
 
@@ -61,11 +64,6 @@ public:
              const std::string& module,
              const char* format,
              va_list args);
-
-    static SharedPtr makeShared()
-    {
-        return SharedPtr(new EventLoggerChannel());
-    }
 
     ofEvent<const LoggerEventArgs> event;
 
