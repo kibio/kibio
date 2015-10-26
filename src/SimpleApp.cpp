@@ -208,7 +208,6 @@ void SimpleApp::draw()
 
 void SimpleApp::keyPressed(ofKeyEventArgs& key)
 {
-	cout << "key-pressed " << key.key << "/" << key.keycode << "/" << key.codepoint << endl;
 #if defined(TARGET_OSX)
     int modifier = OF_KEY_COMMAND;
 #else
@@ -217,7 +216,6 @@ void SimpleApp::keyPressed(ofKeyEventArgs& key)
 
     if (ofGetKeyPressed(modifier))
     {
-		cout << "CONTROL IS PRESSED!!! and also " << key.key << " aka " << key.keycode  << " aka " << key.codepoint  << " we want " << (int)('e') << endl;
         if ('k' == key.key)
         {
             // TODO: is this platform independent?.  No.
@@ -517,12 +515,10 @@ bool SimpleApp::loadProject(const std::string& name, std::shared_ptr<Project> pr
     
 void SimpleApp::promptLoadProject()
 {
-	cout << "loading ... " << getUserProjectsPath().toString()  << endl;
     ofFileDialogResult result = ofSystemLoadDialog("Open Project",
                                                    false,
                                                    getUserProjectsPath().toString());
 
-	
 	if (!result.getName().empty())
     {
         Poco::Path relativePath(result.getPath());
